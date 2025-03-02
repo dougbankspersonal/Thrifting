@@ -1,0 +1,45 @@
+.card.front.truck_card {
+  padding: 0px;
+  position: relative;
+  display: inline-block;
+  min-height: 0px;
+  min-width: 0px;
+}
+
+.card.front.truck_card .wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.card.front.truck_card .wrapper .truck {
+  position: relative;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.card.front.truck_card .wrapper .truck .requirements {
+  position: relative;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.card.front.truck_card .wrapper .score {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  font-family: "DynaPuff", serif;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 30px;
+  padding-bottom: 10px;
+}

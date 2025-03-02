@@ -1,0 +1,32 @@
+.card.front.agenda {
+	padding-top: 40px;
+}
+
+.card.front.agenda div.requirement {
+	display: inline-flex;
+	align-items: center;
+}
+
+.card.front.agenda div.requirement img{
+	height: 50px;
+	width: 50px;
+	vertical-align: middle;
+	padding-right: 5px;
+	padding-left: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.card.front.agenda div.wrapper {
+	padding-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.card.front.agenda div.score {
+	padding-top: 20px;
+	font-family: "DynaPuff", serif;;
+	font-style: italic;
+	font-weight: bold;
+	font-size: 23px;
+}

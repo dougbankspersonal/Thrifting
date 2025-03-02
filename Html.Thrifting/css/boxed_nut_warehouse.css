@@ -1,0 +1,36 @@
+.outer_frame {
+  padding: 20px;
+  width: fit-content;
+  height: fit-content;
+  background-color: rgb(200, 170, 0);
+}
+
+.bordered_square {
+  margin: "10px";
+}
+
+.bordered_square .row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  break-inside: avoid;
+  box-sizing: border-box;
+  width: fit-content;
+  overflow: hidden;
+  font-family: "DynaPuff", serif;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+
+.bordered_square .title_text {
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.bordered_square .warehouse_text {
+  font-size: 18px;
+  color: #666666;
+}
