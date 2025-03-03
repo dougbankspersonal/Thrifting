@@ -1,6 +1,6 @@
 define([
-  "javascript/cards",
-  "javascript/debugLog",
+  "sharedJavascript/cards",
+  "sharedJavascript/debugLog",
   "javascript/gameUtils",
   "javascript/markers",
   "dojo/dom-style",

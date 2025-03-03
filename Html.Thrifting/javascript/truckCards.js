@@ -1,5 +1,5 @@
 define([
-  "javascript/cards",
+  "sharedJavascript/cards",
   "javascript/gameUtils",
   "javascript/markers",
   "dojo/dom-style",

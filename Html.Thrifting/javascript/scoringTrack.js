@@ -1,5 +1,5 @@
 define([
-  "javascript/debugLog",
+  "sharedJavascript/debugLog",
   "javascript/gameUtils",
   "dojo/dom-style",
   "dojo/domReady!",

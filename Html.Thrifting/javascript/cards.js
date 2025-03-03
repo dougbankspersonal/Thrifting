@@ -2,7 +2,7 @@ define([
   "dojo/string",
   "dojo/dom",
   "javascript/gameUtils",
-  "javascript/debugLog",
+  "sharedJavascript/debugLog",
   "dojo/dom-style",
   "dojo/domReady!",
 ], function (string, dom, gameUtils, debugLog, domStyle) {
