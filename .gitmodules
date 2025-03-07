@@ -1,6 +1,6 @@
 [submodule "Html.Nuts/SharedWebBoardgame"]
 	path = Html.Nuts/SharedWebBoardgame
 	url = https://github.com/dougbankspersonal/SharedWebBoardgame
-[submodule "Html.Thrifting/SharedBoardgame"]
-	path = Html.Thrifting/SharedBoardgame
+[submodule "Html.Thrifting/SharedWebBoardgame"]
+	path = Html.Thrifting/SharedWebBoardgame
 	url = https://github.com/dougbankspersonal/SharedWebBoardgame
