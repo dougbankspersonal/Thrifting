@@ -12,9 +12,9 @@
       href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../css/main.css" />
-    <link rel="stylesheet" href="../css/card.css" />
-    <link rel="stylesheet" href="../css/bonus_card.css" />
+    <link rel="stylesheet" href="../SharedWebBoardgame/css/main.css" />
+    <link rel="stylesheet" href="../SharedWebBoardgame/css/card.css" />
+    <link rel="stylesheet" href="../css/clothes_card.css" />
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <style type="text/css"></style>
   </head>
@@ -34,6 +34,10 @@
         packages: [
           { name: "dojo", location: "../../bower_components/dojo" },
           { name: "javascript", location: "javascript" },
+          {
+            name: "sharedJavascript",
+            location: "SharedWebBoardgame/javascript",
+          },
         ],
       };
     </script>
@@ -43,13 +47,12 @@
     <script>
       require([
         "sharedJavascript/cards",
-        "javascript/gameUtils",
+        "sharedJavascript/systemConfigs",
         "javascript/clothesCards",
-      ], function (cards, gameUtils, clothesCards) {
-        gameUtils.setSystemConfigs({
-          skipBacks: false,
-          ttsCards: false,
-        });
+      ], function (cards, systemConfigs, clothesCards) {
+        systemConfigs.setSystemConfigs(
+          systemConfigs.addCardSizingSystemConfigs()
+        );
         cards.addCards(
           "Clothes",
           "#d0f0d0",
