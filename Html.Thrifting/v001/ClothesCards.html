@@ -3,18 +3,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Special+Elite&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../SharedWebBoardgame/css/main.css" />
+    <link rel="stylesheet" href="../SharedWebBoardgame/css/image.css" />
     <link rel="stylesheet" href="../SharedWebBoardgame/css/card.css" />
+    <link rel="stylesheet" href="../css/thrifting_main.css" />
     <link rel="stylesheet" href="../css/clothes_card.css" />
+    <link rel="stylesheet" href="../css/clothes_images.css" />
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <style type="text/css"></style>
   </head>
@@ -50,12 +47,12 @@
         "sharedJavascript/systemConfigs",
         "javascript/clothesCards",
       ], function (cards, systemConfigs, clothesCards) {
-        systemConfigs.setSystemConfigs(
-          systemConfigs.addCardSizingSystemConfigs()
-        );
+        var sc = systemConfigs.addCardSizingSystemConfigs();
+        sc.skipCardBacks = true;
+        systemConfigs.setSystemConfigs(sc);
         cards.addCards(
           "Clothes",
-          "#d0f0d0",
+          "#aaaacc",
           clothesCards.getNumClothesCards(),
           clothesCards.addClothesCard
         );
