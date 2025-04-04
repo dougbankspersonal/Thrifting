@@ -1,74 +1,224 @@
+/*
+Color scheme is applied to top level card.  Unless a section explicity opts out
+it'll set color and shadow on all text on card.
+*/
+
+.color_scheme {
+  text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white,
+    1px 1px 0 white;
+}
+
+.color_scheme.monochrome {
+  color: #444;
+  border-color: #444;
+}
+
+.color_scheme.jewel_tones {
+  color: #17c;
+  border-color: #17c;
+}
+
+.color_scheme.earth_tones {
+  color: #640;
+  border-color: #640;
+}
+
+.color_scheme.pastels {
+  color: #a66;
+  border-color: #a66;
+}
+
+importantText {
+  font-weight: bold;
+  font-size: 116%;
+}
+
+unimportantText {
+  font-size: 75%;
+}
+
+
+
+.card.front.clothes_card.monochrome {
+  border-color: #444444;
+  background: radial-gradient(ellipse, #ffffff, #ccc);
+}
+
+.card.front.clothes_card.jewel_tones {
+  border-color: #1177cc;
+  background: radial-gradient(ellipse, #ffffff, #adf);
+}
+.card.front.clothes_card.earth_tones {
+  border-color: #664400;
+  background: radial-gradient(ellipse, #ffffff, #ec9);
+}
+
+.card.front.clothes_card.pastels {
+  border-color: #aa7777;
+  background: radial-gradient(ellipse, #ffffff, #fdd);
+}
+
 .card.front.clothes_card {
-  border-color: #333366;
-}
-
-.item_name {
-  font-size: 24px;
-  padding-top: 18px;
-  padding-bottom: 8px;
-  font-weight: bold;
-  height: 50px;
-  display: flex;
   justify-content: center;
   align-items: center;
-}
+  gap: 0;
+  position: relative;
+  text-align: center;
 
-.specs_section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
+  .widget_container {
+    position: absolute;
+    left: 10%;
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
 
-.specs_section.try_on_specs {
-  height: 45px;
-}
+    .widget {
+        height: 30px;
+        width: 50px;
+        border-radius: 20%;
+        border-style: solid;
+        border-width: 2px;
+        display: flex;
+        justify-content: center;
 
-.specs_section .name_value_pair {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 2px;
-}
+        .widget_text {
+          font-size: 14px;
+          text-align: center;
+        }
+    };
+  }
 
-.specs_section .name_value_pair .name {
-  font-style: italic;
-  color: #666;
-}
+  .widget_container.top {
+    top: 0px;
 
-.specs_section .name_value_pair .value {
-  padding-left: 10px;
-  font-weight: bold;
-}
+    .widget {
+        transform: translateY(-25%);
+        align-items: flex-end;
+        .widget_contents {
+          margin-bottom: 2px;
+        }
+    };
+  }
 
-.dice_container {
-  display: flex;
-  align-items: start;
-  justify-content: center;
-}
+  .widget_container.bottom {
+    bottom: 0px;
 
-.try_on_header {
-  margin-top: 15px;
-  font-size: 12px;
-}
+    .widget {
+        transform: translateY(25%);
+        align-items: flex-start;
+        .widget_contents {
+          margin-top: 5px;
+        }
+    };
+  }
 
-.try_on_details {
-  font-size: 16px;
-  font-weight: bold;
-}
+  .formatted_wrapper {
+    position: relative;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
 
-.special_clause {
-  margin-top: 15px;
-  font-size: 12px;
-}
+    .style.bohemian {
+      font-family: "Boho";
+    }
 
-.special_clause.good {
-  color: #090;
-}
+    .style.classic {
+      font-family: "Merriweather";
+    }
 
-.special_clause.bad {
-  color: #900;
+    .style.elegant {
+      font-family: "Cinzel";
+    }
+
+    .style.retro {
+      font-family: "Groovy";
+    }
+
+    .style.whimsical {
+      font-family: "HennyPenny";
+    }
+
+    .card_spec {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 18px;
+      font-weight: bold;
+      width: 100%;
+      position: relative;
+
+      .piece_container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        .piece_image {
+          height: 36px;
+          width: 36px;
+        }
+      }
+    }
+
+    .instance_name_container {
+      height: 90px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
+
+      .instance_name {
+        font-size: 24px;
+        font-weight: bold;
+        display: inline-block;
+  /*      height: 100%; */
+        text-align: center; /* Center the text horizontally */
+        white-space: normal; /* Allows text to wrap */
+        word-wrap: break-word; /* Breaks long words if needed */
+        overflow-wrap: break-word;=
+      }
+    }
+
+    .try_on_rules {
+      width: 100%;
+      font-size: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+
+      .num_dice_and_rolls {
+        font-style: italic;
+      }
+
+      .try_on_details {
+        margin-top: 4px;
+        font-weight: bold;
+      }
+    }
+    .special_clause {
+      margin-top: 10px;
+      font-size: 12px;
+    }
+
+    .special_clause.good {
+      color: #090;
+    }
+
+    .special_clause.bad {
+      color: #900;
+    }
+  }
 }
 
 .card.back .title {

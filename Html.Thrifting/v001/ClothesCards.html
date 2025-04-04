@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="../SharedWebBoardgame/css/main.css" />
     <link rel="stylesheet" href="../SharedWebBoardgame/css/image.css" />
     <link rel="stylesheet" href="../SharedWebBoardgame/css/card.css" />
-    <link rel="stylesheet" href="../css/thrifting_main.css" />
     <link rel="stylesheet" href="../css/clothes_card.css" />
-    <link rel="stylesheet" href="../css/clothes_images.css" />
+    <link rel="stylesheet" href="../css/thrifting_image.css" />
+    <link rel="stylesheet" href="../css/thrifting_main.css" />
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <style type="text/css"></style>
   </head>
@@ -44,17 +44,39 @@
     <script>
       require([
         "sharedJavascript/cards",
+        "sharedJavascript/debugLog",
         "sharedJavascript/systemConfigs",
         "javascript/clothesCards",
-      ], function (cards, systemConfigs, clothesCards) {
-        var sc = systemConfigs.addCardSizingSystemConfigs();
-        sc.skipCardBacks = true;
+      ], function (cards, debugLog, systemConfigs, clothesCards) {
+        var isTTS = false;
+        var sc;
+        if (isTTS) {
+          sc = systemConfigs.addTTSCardSystemConfigs();
+        } else {
+          sc = systemConfigs.addCardSizingSystemConfigs();
+          sc.skipCardBacks = true;
+        }
+
         systemConfigs.setSystemConfigs(sc);
+
+        var numClothesCards = clothesCards.getNumClothesCards();
+        debugLog.debugLog("ScalingText", "Doug: Waiting for DOMContentLoaded!");
+
         cards.addCards(
           "Clothes",
           "#aaaacc",
-          clothesCards.getNumClothesCards(),
+          numClothesCards,
           clothesCards.addClothesCard
+        );
+
+        // Delay scaling for 0ms to allow DOM updates to apply
+        setTimeout(() => {
+          clothesCards.doInstanceNameTextScalingForAllCards(numClothesCards);
+        }, 500);
+
+        debugLog.debugLog(
+          "ScalingText",
+          "Doug: called doInstanceNameTextScalingForAllCards.  Did it finish?"
         );
       });
     </script>

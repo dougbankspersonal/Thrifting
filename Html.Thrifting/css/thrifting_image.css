@@ -1,0 +1,23 @@
+div.pseudo_image.bottom {
+  background-image: url("../images/ClothesCards/bottom.png");
+}
+
+div.pseudo_image.dress {
+  background-image: url("../images/ClothesCards/dress.png");
+}
+
+div.pseudo_image.hat {
+  background-image: url("../images/ClothesCards/hat.png");
+}
+
+div.pseudo_image.shoes {
+  background-image: url("../images/ClothesCards/shoes.png");
+}
+
+div.pseudo_image.top {
+  background-image: url("../images/ClothesCards/top.png");
+}
+
+div.pseudo_image.wrap {
+  background-image: url("../images/ClothesCards/wrap.png");
+}

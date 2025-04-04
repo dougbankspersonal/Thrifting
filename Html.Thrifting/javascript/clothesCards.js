@@ -2,248 +2,72 @@ define([
   "dojo/dom-style",
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
-  "sharedJavascript/genericUtils",
   "sharedJavascript/htmlUtils",
+  "javascript/instanceNames",
+  "javascript/cardSpec",
+  "javascript/parameters",
+  "javascript/thriftingHtmlUtils",
+  "javascript/tryOnRules",
   "dojo/domReady!",
-], function (domStyle, cards, debugLog, genericUtils, htmlUtils) {
-  var minSpecialStars = 2;
-  var maxSpecialStars = 4;
-
+], function (
+  domStyle,
+  cards,
+  debugLog,
+  htmlUtils,
+  instanceNames,
+  cardSpec,
+  parameters,
+  thriftingHtmlUtils,
+  tryOnRules
+) {
+  var numInstancesForGivenPieceColorSchemeStyle = 2;
   // For now I will auto generate deterministically because there are too many to write by hand.
-  var pieces = ["Top", "Bottom", "Shoes", "Dress", "Hat", "Wrap"];
 
-  var colorSchemes = ["Earth Tones", "Jewel Tones", "Pastels", "Monochrome"];
+  var initialInstanceNameFontSize = 100;
 
-  var styles = ["Bohemian", "Retro", "Classic", "Elegant", "Whimsical"];
-
-  var paramNamePiece = "piece";
-  var paramNameStyle = "style";
-  var paramNameColorScheme = "colorScheme";
-
-  var paramaterNamesToParameterValues = {
-    [paramNamePiece]: pieces,
-    [paramNameStyle]: styles,
-    [paramNameColorScheme]: colorSchemes,
-  };
-
-  var orderedParameterNames = Object.keys(paramaterNamesToParameterValues);
-
-  specificInstances = {
-    Top: {
-      Bohemian: ["Peasant Blouse", "Tunic Top", "Off-the-Shoulder Top"],
-      Retro: ["Mod Turtleneck", "Wrap Blouse", "Disco Shirt"],
-      Classic: ["Button-Up Shirt", "Polo Shirt", "Crew Neck Tee"],
-      Elegant: ["Silk Blouse", "Satin Camisole", "Chiffon Blouse"],
-      Whimsical: ["Graphic Tee", "Novelty Print Blouse", "Pajama Top"],
-    },
-    Bottom: {
-      Bohemian: ["Palazzo Pants", "Gaucho Pants", "Gypsy Skirt"],
-      Retro: [
-        "High-Waisted Pencil Skirt",
-        "A-Line Mini Skirt",
-        "Corduroy Flares",
-      ],
-      Classic: ["Chinos", "Jeans", "Bermuda Shorts"],
-      Elegant: ["Pleated Trousers", "Satin Skirt", "Tulle Skirt"],
-      Whimsical: ["Ptchwork Pants", "Tutu", "Fairycore Skirt"],
-    },
-    Shoes: {
-      Bohemian: ["Espadrilles ", "Moccasins", "Beaded Slip-Ons "],
-      Retro: ["Saddle Shoes", "Go-go Boots", "Clogs"],
-      Classic: ["Oxford Shoes", "Slingback Heels", "Strappy Sandals"],
-      Elegant: ["Satin Heels", "D'Orsay Heels", "Embellished Flats"],
-      Whimsical: ["Bunny Slippers", "Combat Boots", "Heelys"],
-    },
-    Dress: {
-      Bohemian: ["Peasant Dress", "Prairie Dress", "Bell Sleeve Dress"],
-      Retro: ["Flapper Dress", "Swing Dress", "Mod Dress"],
-      Classic: ["Empire Waist Dress", "Little Black Dress", "A-Line Dress"],
-      Elegant: ["Ball Gown", "Cocktail Dress", "Velvet Gown"],
-      Whimsical: ["Muumuu", "Evil Queen Costume", "Anime Cosplay Dress"],
-    },
-    Hat: {
-      Bohemian: ["Frayed Edge Hat", "Oversized Sun Hat", "Felt Fedora"],
-      Retro: ["Flapper Headband", "Pillbox Hat", "Bowler Hat"],
-      Classic: ["Beanie", "Baseball Cap", "Bucket Hat"],
-      Elegant: ["Tiara", "Fanscinator", "Turban"],
-      Whimsical: ["Mickey Mouse Ears", "Gorilla Mask", "Unicorn Horn"],
-    },
-    Accessory: {
-      Bohemian: ["Boho Choker", "Turquoise Bracelet", "Fringe Bag"],
-      Retro: ["Long Gloves", "Tulle Scarf", "Cat Eye Sunglasses"],
-      Classic: ["Pearl Earrings", "Clutch Purse", "Hoop Earrings"],
-      Elegant: ["Tennis Bracelet", "Evening Bag", "Ring"],
-      Whimsical: ["Fanny Pack", "Furry Earmuffs", "Magic Wand"],
-    },
-    Wrap: {
-      Bohemian: ["Poncho", "Hippie Shawl", "Tie Dye Shawl"],
-      Retro: ["Swing Coat", "Crochet Cardigan", "Letterman Jacket"],
-      Classic: ["Trench Coat", "Peacoat", "Blazer"],
-      Elegant: ["Cape", "Fur Coat", "Evening Wrap"],
-      Whimsical: ["Oversize Fur Coat", "Superhero Cape", "Fairy Wings"],
-    },
-  };
-
-  var itemNameIndex = 0;
-  function getNextItemName(clothesCardConfig) {
-    var piece = clothesCardConfig.piece;
-    var style = clothesCardConfig.style;
-    var possibilities = specificInstances[piece][style];
-    var index = itemNameIndex % possibilities.length;
-    itemNameIndex++;
-    return possibilities[index];
-  }
-
-  // Quasi random number generator.  Returns zero to < 1.
-  var getSeededRandomZeroToOne =
-    genericUtils.createSeededGetZeroToOneRandomFunction(3276373);
-
-  function generateTryOnRules() {
-    var retVal = [
-      {
-        numDice: 4,
-        numRolls: 3,
-        details: `3 of a kind`,
-      },
-      {
-        numDice: 5,
-        numRolls: 3,
-        details: `Straight of 4`,
-      },
-      {
-        numDice: 4,
-        numRolls: 2,
-        details: "All even numbers",
-      },
-      {
-        numDice: 4,
-        numRolls: 2,
-        details: "All odd numbers",
-      },
-      {
-        numDice: 7,
-        details: "Tower: hold 5 sec.",
-      },
-      {
-        numDice: 4,
-        numRolls: 4,
-        details: "Sum to exactly 14",
-      },
-      {
-        numDice: 4,
-        numRolls: 3,
-        details: "2 sets of Doubles",
-      },
-      {
-        numDice: 2,
-        numRolls: 3,
-        details: "Doubles",
-      },
-      {
-        numDice: 3,
-        numRolls: 4,
-        details: "Sum to 15 or more",
-      },
-      {
-        numDice: 3,
-        numRolls: 4,
-        details: "Sum to 6 or less",
-      },
-      {
-        numDice: 5,
-        numRolls: 5,
-        details: "4 of a kind",
-      },
-      {
-        numDice: 6,
-        numRolls: 5,
-        details: "Straight of 5",
-      },
-    ];
-
-    return retVal;
-  }
-
-  var tryOnRules;
-  function getRandomTryOnRule() {
-    if (!tryOnRules) {
-      tryOnRules = generateTryOnRules();
-    }
-    debugLog.debugLog(
-      "Random",
-      "Doug getRandomTryOnRule: tryOnRules = " + tryOnRules
-    );
-    return genericUtils.getRandomArrayElement(
-      tryOnRules,
-      getSeededRandomZeroToOne
-    );
-  }
-
-  function makeRandomSpecial(specialType, clothesCardConfig) {
-    debugLog.debugLog(
-      "Cards",
-      "Doug makeRandomSpecial: specialType = " + specialType
-    );
-    debugLog.debugLog(
-      "Cards",
-      "Doug makeRandomSpecial: clothesCardConfig = " +
-        JSON.stringify(clothesCardConfig)
-    );
-
-    // This <piece> would look <good|bad> with a <other piece> with <matching color/style | non-matching color/style>
-    var otherPiece = genericUtils.getRandomArrayElementNotMatching(
-      pieces,
-      clothesCardConfig.pieces,
-
-      getSeededRandomZeroToOne
-    );
-    debugLog.debugLog(
-      "Cards",
-      "Doug makeRandomSpecial: otherPiece = " + otherPiece
-    );
-
-    // Random non-piece value to match.
-    var matchingParameterName = genericUtils.getRandomArrayElementNotMatching(
-      orderedParameterNames,
-      paramNamePiece,
-      getSeededRandomZeroToOne
-    );
-    debugLog.debugLog(
-      "Special",
-      "Doug makeRandomSpecial: matchingParameterName = " + matchingParameterName
-    );
-    debugLog.debugLog(
-      "Special",
-      "Doug makeRandomSpecial: clothesCardConfig = " + clothesCardConfig
-    );
-
-    var special = {
-      specialType: specialType,
-      stars: genericUtils.getIntRandomInRange(
-        minSpecialStars,
-        maxSpecialStars,
-        getSeededRandomZeroToOne
-      ),
-      otherPiece: otherPiece,
-      matchingParameterName: matchingParameterName,
-    };
-
-    if (specialType < 2) {
-      special.matchingParameterValue = clothesCardConfig[matchingParameterName];
+  function addWidgetContainerNode(parentNode, isTop) {
+    var classArray = ["widget_container"];
+    if (isTop) {
+      classArray.push("top");
     } else {
-      var parameterValue = genericUtils.getRandomArrayElementNotMatching(
-        paramaterNamesToParameterValues[matchingParameterName],
-        clothesCardConfig[matchingParameterName],
-        getSeededRandomZeroToOne
-      );
-      special.matchingParameterValue = parameterValue;
+      classArray.push("bottom");
     }
+    var widgetContainerNode = htmlUtils.addDiv(
+      parentNode,
+      classArray,
+      "widgetContainer"
+    );
+    return widgetContainerNode;
+  }
 
-    return special;
+  function addWidgetNode(parentNode, textContents) {
+    var widgetNode = htmlUtils.addDiv(parentNode, ["widget"], "topWidget");
+    htmlUtils.addDiv(
+      widgetNode,
+      ["widget_contents"],
+      "widgetContents",
+      textContents
+    );
+    return widgetNode;
+  }
+
+  function addTopWidgets(parentNode) {
+    var topWidgetContainerNode = addWidgetContainerNode(parentNode, true);
+    addWidgetNode(topWidgetContainerNode, "$");
+    addWidgetNode(topWidgetContainerNode, "$$");
+    addWidgetNode(topWidgetContainerNode, "$$$");
+    return topWidgetContainerNode;
+  }
+
+  function addBottomWidgets(parentNode) {
+    var topWidgetContainerNode = addWidgetContainerNode(parentNode, false);
+    addWidgetNode(topWidgetContainerNode, "1/2");
+    addWidgetNode(topWidgetContainerNode, "Torn");
+    return topWidgetContainerNode;
   }
 
   function generateClothesCardConfig(pieceIndex, styleIndex, colorSchemeIndex) {
-    var tryOnRule = getRandomTryOnRule();
+    var tryOnRuleConfig = tryOnRules.getRandomTryOnRuleConfig();
 
     debugLog.debugLog("CardConfigs", "Doug: pieceIndex = " + pieceIndex);
     debugLog.debugLog("CardConfigs", "Doug: styleIndex = " + styleIndex);
@@ -253,10 +77,10 @@ define([
     );
 
     var clothesCardConfig = {
-      piece: pieces[pieceIndex],
-      colorScheme: colorSchemes[colorSchemeIndex],
-      style: styles[styleIndex],
-      tryOnRule: tryOnRule,
+      piece: parameters.orderedPieces[pieceIndex],
+      colorScheme: parameters.orderedColorSchemes[colorSchemeIndex],
+      style: parameters.orderedStyles[styleIndex],
+      tryOnRuleConfig: tryOnRuleConfig,
     };
 
     return clothesCardConfig;
@@ -264,17 +88,24 @@ define([
 
   function generateClothesCardConfigs() {
     var retVal = [];
-    for (var pieceIndex = 0; pieceIndex < pieces.length; pieceIndex++) {
-      for (var styleIndex = 0; styleIndex < styles.length; styleIndex++) {
+    for (
+      var pieceIndex = 0;
+      pieceIndex < parameters.orderedPieces.length;
+      pieceIndex++
+    ) {
+      for (
+        var styleIndex = 0;
+        styleIndex < parameters.orderedStyles.length;
+        styleIndex++
+      ) {
         for (
           var colorSchemeIndex = 0;
-          colorSchemeIndex < colorSchemes.length;
+          colorSchemeIndex < parameters.orderedColorSchemes.length;
           colorSchemeIndex++
         ) {
-          var numInstances = 2;
           for (
             var instanceIndex = 0;
-            instanceIndex < numInstances;
+            instanceIndex < numInstancesForGivenPieceColorSchemeStyle;
             instanceIndex++
           ) {
             var clothesCardConfig = generateClothesCardConfig(
@@ -304,127 +135,57 @@ define([
     return _numClothesCards;
   }
 
-  function addNameValuePair(parentNode, name, value) {
-    var nvp = htmlUtils.addDiv(parentNode, ["name_value_pair"], "nvp");
-    htmlUtils.addDiv(nvp, ["name"], "name", name.toString() + ":<nbsp>");
-    htmlUtils.addDiv(nvp, ["value"], "value", value.toString());
-  }
+  function addInstanceNameNode(parentNode, clothesCardConfig, cardIndex) {
+    // Get the name of the piece.
+    var instanceName = instanceNames.getNextInstanceName(clothesCardConfig);
 
-  function addTryOnRules(parentNode, clothesCardConfig) {
-    var tryOnRule = clothesCardConfig.tryOnRule;
-    var numDice = tryOnRule.numDice;
-    var numRolls = tryOnRule.numRolls;
-
-    htmlUtils.addDiv(
+    var instanceNameContainerNode = htmlUtils.addDiv(
       parentNode,
-      ["try_on_header"],
-      "tryOnHeader",
-      "To try on:"
+      ["instance_name_container"],
+      "instanceNameContainer" + cardIndex
     );
 
-    var specsSectionNode = htmlUtils.addDiv(
-      parentNode,
-      ["specs_section", "try_on_specs"],
-      "specsSection"
+    var classArray = ["instance_name"];
+    thriftingHtmlUtils.addStyleClasses(classArray, clothesCardConfig.style);
+
+    var instanceNameNode = htmlUtils.addDiv(
+      instanceNameContainerNode,
+      classArray,
+      "instanceName" + cardIndex,
+      instanceName
     );
 
-    debugLog.debugLog("CardConfigs", "Doug: numDice = " + numDice);
-    debugLog.debugLog("CardConfigs", "Doug: numRolls = " + numRolls);
-    addNameValuePair(specsSectionNode, "#Dice", numDice);
-    if (numRolls) {
-      addNameValuePair(specsSectionNode, "#Rolls", numRolls);
-    }
-
-    var rulesTextNode = htmlUtils.addDiv(
-      parentNode,
-      ["try_on_details"],
-      "tryOnRules",
-      tryOnRule.details
-    );
-    domStyle.set(rulesTextNode, {
-      "margin-top": "5px",
+    // Set font size super large: we scale it down later.
+    domStyle.set(instanceNameNode, {
+      ["font-size"]: initialInstanceNameFontSize + "px",
     });
   }
 
-  function addSpecial(parentNode, special) {
-    var text = "With ";
-
-    debugLog.debugLog(
-      "Special",
-      "Doug addSpecial: special = " + JSON.stringify(special)
-    );
-
-    if (special.matchingParameterName == paramNameStyle) {
-      var styleText = special.matchingParameterValue;
-      text += " " + styleText + " " + special.otherPiece;
-    } else if (special.matchingParameterName == paramNameColorScheme) {
-      var colorSchemeText = special.matchingParameterValue;
-      text += special.otherPiece + " in " + colorSchemeText;
-    }
-
-    if (special.specialType == 0) {
-      text += "<br>+ " + special.stars.toString() + " ⭐";
-    } else if (special.specialType == 1) {
-      text += "<br>%50 off!";
-    } else {
-      text += "<br>- " + special.stars.toString() + " ⭐";
-    }
-
-    var good_or_bad_class = special.specialType < 2 ? "good" : "bad";
-
-    htmlUtils.addDiv(
-      parentNode,
-      ["special_clause", good_or_bad_class],
-      "special",
-      text
-    );
-  }
-
-  var specialIndex = 0;
-  function maybeGetSpecial(clothesCardConfig) {
-    var index = specialIndex % 8;
-    specialIndex = specialIndex + 1;
-    if (index == 0) {
-      return makeRandomSpecial(0, clothesCardConfig);
-    } else if (index == 1) {
-      return makeRandomSpecial(1, clothesCardConfig);
-    } else if (index == 2) {
-      return makeRandomSpecial(2, clothesCardConfig);
-    } else {
-      return null;
-    }
-  }
-
-  function addClothesDesc(parentNode, clothesCardConfig) {
+  function addClothesDesc(parentNode, clothesCardConfig, cardIndex) {
     var formattedWrapper = htmlUtils.addDiv(
       parentNode,
       ["formatted_wrapper"],
       "formatted_wrapper"
     );
 
-    // Get the name of the piece.
-    var itemName = getNextItemName(clothesCardConfig);
-
-    htmlUtils.addDiv(formattedWrapper, ["item_name"], "itemName", itemName);
-
-    // A section of name-value pairs listing the piece, color scheme, and style.
-    var specsSection = htmlUtils.addDiv(
+    // A section describing piece, style, color.
+    var cardSpecNode = cardSpec.addCardSpecNode(
       formattedWrapper,
-      ["specs_section", "clothes_specs"],
-      "specsSection"
+      clothesCardConfig,
+      true
     );
+
+    // The name of the piece.
+    addInstanceNameNode(formattedWrapper, clothesCardConfig, cardIndex);
 
     debugLog.debugLog(
       "CardConfigs",
       "Doug: addClothesDesc clothesCardConfig = " +
         JSON.stringify(clothesCardConfig)
     );
-    addNameValuePair(specsSection, "Piece", clothesCardConfig.piece);
-    addNameValuePair(specsSection, "Style", clothesCardConfig.style);
-    addNameValuePair(specsSection, "Colors", clothesCardConfig.colorScheme);
 
     // A section on how to try it on.
-    addTryOnRules(formattedWrapper, clothesCardConfig);
+    tryOnRules.addTryOnRuleNode(formattedWrapper, clothesCardConfig);
 
     debugLog.debugLog(
       "Cards",
@@ -432,12 +193,8 @@ define([
         JSON.stringify(clothesCardConfig)
     );
 
-    var special = maybeGetSpecial(clothesCardConfig);
-
-    if (special) {
-      debugLog.debugLog("Special", "Doug addClothesDesc: adding special");
-      addSpecial(formattedWrapper, special);
-    }
+    addTopWidgets(parentNode);
+    addBottomWidgets(parentNode);
   }
 
   function addClothesCard(parentNode, index) {
@@ -450,14 +207,94 @@ define([
     var id = idElements.join(".");
     var classArray = [];
     classArray.push("clothes_card");
+
+    // Color of item affect styling of card.
+    thriftingHtmlUtils.addColorSchemeClasses(
+      classArray,
+      clothesCardConfig.colorScheme
+    );
+
     var cardFront = cards.addCardFront(parentNode, classArray, id);
 
-    addClothesDesc(cardFront, clothesCardConfig);
+    addClothesDesc(cardFront, clothesCardConfig, index);
     return cardFront;
+  }
+
+  function recursiveInstanceNameTextScalingForNthCard(
+    cardIndex,
+    fontSize,
+    containerOffsetWidth,
+    containerOffseHeight
+  ) {
+    var textNode = document.querySelector("#instanceName" + cardIndex);
+    console.assert(textNode, "textNode is null");
+
+    // These will change.
+    var textOffsetWidth = textNode.offsetWidth;
+    var textScrollHeight = textNode.scrollHeight;
+
+    if (
+      textOffsetWidth <= containerOffsetWidth &&
+      textScrollHeight <= containerOffseHeight
+    ) {
+      // All good.
+      return;
+    }
+
+    // Too big.  Shrink and try again
+    if (
+      textOffsetWidth > containerOffsetWidth ||
+      textScrollHeight > containerOffseHeight
+    ) {
+      // Too big.  Shrink the font size.
+      fontSize -= 2;
+      if (fontSize < 10) {
+        // Too small, punt.
+        return;
+      }
+
+      // Apply the new font size.
+      textNode.style.fontSize = fontSize + "px";
+      // After everything settles,try again.
+      requestAnimationFrame(() => {
+        recursiveInstanceNameTextScalingForNthCard(
+          cardIndex,
+          fontSize,
+          containerOffsetWidth,
+          containerOffseHeight
+        );
+      });
+    }
+  }
+
+  function doInstanceNameTextScalingForAllCards(numCards) {
+    // All containers are the same, grab once.
+    var container = document.querySelector("#instanceNameContainer0");
+    var containerOffsetWidth = container.offsetWidth;
+    var containerOffsetHeight = container.offsetHeight;
+
+    debugLog.debugLog(
+      "ScalingText",
+      "containerOffsetWidth = " + containerOffsetWidth
+    );
+    debugLog.debugLog(
+      "ScalingText",
+      "containerOffsetHeight = " + containerOffsetHeight
+    );
+
+    for (var i = 0; i < numCards; i++) {
+      recursiveInstanceNameTextScalingForNthCard(
+        i,
+        initialInstanceNameFontSize,
+        containerOffsetWidth,
+        containerOffsetHeight
+      );
+    }
   }
 
   return {
     getNumClothesCards: getNumClothesCards,
     addClothesCard: addClothesCard,
+    doInstanceNameTextScalingForAllCards: doInstanceNameTextScalingForAllCards,
   };
 });
