@@ -28,8 +28,9 @@ define([
         'May put items in the Rejects pile into your "To Try On" basket',
     },
     {
-      title: "Savvy Shopper",
-      rulesText: "Items are 1/2 off on a roll of 7 or 8",
+      title: "Strong",
+      rulesText:
+        '"To Try On" and "It Fits!" baskets can hold as many items as you want.',
     },
     {
       title: "She Wears It Well",
