@@ -54,7 +54,6 @@
           sc = systemConfigs.addTTSCardSystemConfigs();
         } else {
           sc = systemConfigs.addCardSizingSystemConfigs();
-          sc.skipCardBacks = true;
         }
 
         systemConfigs.setSystemConfigs(sc);
@@ -63,7 +62,7 @@
         debugLog.debugLog("ScalingText", "Doug: Waiting for DOMContentLoaded!");
 
         cards.addCards(
-          "Clothes",
+          "Item",
           "#aaaacc",
           numClothesCards,
           clothesCards.addClothesCard
