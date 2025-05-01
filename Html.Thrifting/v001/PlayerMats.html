@@ -1,0 +1,163 @@
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../SharedWebBoardGame/css/main.css" />
+    <link rel="stylesheet" href="../SharedWebBoardGame/css/image.css" />
+    <link rel="stylesheet" href="../css/player_mat.css" />
+    <link rel="stylesheet" href="../css/thrifting_image.css" />
+    <link rel="stylesheet" href="../css/thrifting_main.css" />
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <style type="text/css"></style>
+  </head>
+
+  <body class="c1 doc-content" id="body">
+    <!-- configure Dojo -->
+    <script>
+      // Instead of using data-dojo-config, we're creating a dojoConfig
+      // object *before* we load dojo.js; they're functionally identical,
+      // it's just easier to read this approach with a larger configuration.
+      var dojoConfig = {
+        baseUrl: "..",
+        async: true,
+        // This code registers the correct location of the "demo"
+        // package so we can load Dojo from the CDN whilst still
+        // being able to load local modules
+        packages: [
+          { name: "dojo", location: "../../bower_components/dojo" },
+          { name: "javascript", location: "javascript" },
+          {
+            name: "sharedJavascript",
+            location: "SharedWebBoardgame/javascript",
+          },
+        ],
+      };
+    </script>
+    <!-- load Dojo -->
+    <script src="../../../bower_components/dojo/dojo.js"></script>
+
+    <script>
+      require([
+        "sharedJavascript/cards",
+        "sharedJavascript/debugLog",
+        "sharedJavascript/genericMeasurements",
+        "sharedJavascript/htmlUtils",
+        "sharedJavascript/systemConfigs",
+        "javascript/gameInfo",
+        "dojo/dom",
+        "dojo/dom-style",
+      ], function (
+        cards,
+        debugLog,
+        genericMeasurements,
+        htmlUtils,
+        systemConfigs,
+        gameInfo,
+        dom,
+        domStyle
+      ) {
+        var sc = systemConfigs.addLandscapeSystemConfigs();
+        systemConfigs.setSystemConfigs(sc);
+
+        var originalImageWidth = 1450;
+        var originalImageHeight = 800;
+        var outerFrameWidth = 20;
+
+        var desiredTotalWidth =
+          genericMeasurements.printedPagePortraitHeight - 10;
+        var desiredImageWidth = desiredTotalWidth - 2 * outerFrameWidth;
+        var desiredImageWidth =
+          genericMeasurements.printedPagePortraitHeight - 50;
+        var imageScale = desiredImageWidth / originalImageWidth;
+        var desiredImageHeight = originalImageHeight * imageScale;
+
+        var matsPerPage = 1;
+
+        console.log("Doug: matsPerPage = " + matsPerPage);
+
+        function addPlayerMat(pageNode, index) {
+          var playerClass = "player" + index;
+          var classes = ["outer_frame", playerClass];
+          var outerFrameNode = htmlUtils.addDiv(
+            pageNode,
+            classes,
+            "clearBackground"
+          );
+          domStyle.set(outerFrameNode, {
+            padding: `${outerFrameWidth}px`,
+          });
+
+          var playerMatNode = htmlUtils.addImage(
+            outerFrameNode,
+            ["player_mat_image"],
+            "mainDiv"
+          );
+
+          domStyle.set(playerMatNode, {
+            height: desiredImageHeight + "px",
+            width: desiredImageWidth + "px",
+          });
+
+          var toTryOnWrapperNode = htmlUtils.addDiv(
+            playerMatNode,
+            ["to_try_on_wrapper"],
+            "toTryOnWrapper"
+          );
+
+          htmlUtils.addDiv(
+            toTryOnWrapperNode,
+            ["text_block", "to_try_on"],
+            "toTryOn",
+            `<div class="main_text">To<br>Try On</div><br><div class="sub_text">Limit 3 Priced Items</div>`
+          );
+
+          var itFitsWrapperNode = htmlUtils.addDiv(
+            playerMatNode,
+            ["it_fits_wrapper"],
+            "itFitsWrapper"
+          );
+
+          htmlUtils.addDiv(
+            itFitsWrapperNode,
+            ["text_block", "it_fits"],
+            "itFits",
+            "It Fits!"
+          );
+
+          var boughtWrapperNode = htmlUtils.addDiv(
+            playerMatNode,
+            ["bought_wrapper"],
+            "boughtWraooer"
+          );
+
+          htmlUtils.addDiv(
+            boughtWrapperNode,
+            ["text_block", "bought"],
+            "bought",
+            "Bought"
+          );
+        }
+
+        // Make the body node.
+        var bodyNode = dom.byId("body");
+
+        var pageOfItemsContentsNode;
+
+        for (var i = 0; i < gameInfo.maxPlayers; i++) {
+          if (i % matsPerPage == 0) {
+            pageOfItemsContentsNode = htmlUtils.addPageOfItems(bodyNode);
+            domStyle.set(pageOfItemsContentsNode, {
+              display: "inline-flex",
+              "flex-direction": "column",
+            });
+          }
+          addPlayerMat(pageOfItemsContentsNode, i);
+        }
+      });
+    </script>
+  </body>
+</html>

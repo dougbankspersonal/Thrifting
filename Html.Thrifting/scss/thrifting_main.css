@@ -4,27 +4,29 @@
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: "Groovy";
   src: url("../fonts/groovy/Groovy.ttf") format("truetype"); /* Adjust the path as needed */
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: "Cinzel";
   src: url("../fonts/Cinzel/Cinzel-VariableFont_wght.ttf") format("truetype"); /* Adjust the path as needed */
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: "HennyPenny";
   src: url("../fonts/hennyPenny/HennyPenny-Regular.ttf") format("truetype"); /* Adjust the path as needed */
   font-weight: normal;
   font-style: normal;
 }
+
 body {
   font-family: "Special Elite", system-ui;
   /* font-family: "Lucida Handwriting"; */
 }
-
-/*# sourceMappingURL=thrifting_main.css.map */
