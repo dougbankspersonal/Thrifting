@@ -63,17 +63,19 @@
         var sc = systemConfigs.addLandscapeSystemConfigs();
         systemConfigs.setSystemConfigs(sc);
 
-        var originalImageWidth = 1450;
-        var originalImageHeight = 800;
-        var outerFrameWidth = 20;
+        var originalImageWidthPx = 927;
+        var originalImageHeightPx = 495;
+        var outerFrameWidthPx = 20;
 
-        var desiredTotalWidth =
-          genericMeasurements.printedPagePortraitHeight - 10;
-        var desiredImageWidth = desiredTotalWidth - 2 * outerFrameWidth;
-        var desiredImageWidth =
-          genericMeasurements.printedPagePortraitHeight - 50;
-        var imageScale = desiredImageWidth / originalImageWidth;
-        var desiredImageHeight = originalImageHeight * imageScale;
+        var gutterAroundImagePx = 30;
+
+        // Width/height swap is deliberate, this is landscape.
+        var desiredTotalWidthPx =
+          genericMeasurements.printedPagePortraitHeightPx -
+          2 * gutterAroundImagePx;
+        var desiredImageWidthPx = desiredTotalWidthPx - 2 * outerFrameWidthPx;
+        var imageScale = desiredImageWidthPx / originalImageWidthPx;
+        var desiredImageHeightPx = originalImageHeightPx * imageScale;
 
         var matsPerPage = 1;
 
@@ -88,57 +90,38 @@
             "clearBackground"
           );
           domStyle.set(outerFrameNode, {
-            padding: `${outerFrameWidth}px`,
+            padding: `${outerFrameWidthPx}px`,
           });
 
-          var playerMatNode = htmlUtils.addImage(
+          var playerMatImageNode = htmlUtils.addImage(
             outerFrameNode,
             ["player_mat_image"],
             "mainDiv"
           );
 
-          domStyle.set(playerMatNode, {
-            height: desiredImageHeight + "px",
-            width: desiredImageWidth + "px",
+          domStyle.set(playerMatImageNode, {
+            height: desiredImageHeightPx + "px",
+            width: desiredImageWidthPx + "px",
           });
 
-          var toTryOnWrapperNode = htmlUtils.addDiv(
-            playerMatNode,
-            ["to_try_on_wrapper"],
-            "toTryOnWrapper"
-          );
-
           htmlUtils.addDiv(
-            toTryOnWrapperNode,
-            ["text_block", "to_try_on"],
+            playerMatImageNode,
+            ["bag_label", "to_try_on"],
             "toTryOn",
-            `<div class="main_text">To<br>Try On</div><br><div class="sub_text">Limit 3 Priced Items</div>`
-          );
-
-          var itFitsWrapperNode = htmlUtils.addDiv(
-            playerMatNode,
-            ["it_fits_wrapper"],
-            "itFitsWrapper"
+            `<div class="main_text">To<br>Try On</div><div class="sub_text">Limit 3 Priced Items</div>`
           );
 
           htmlUtils.addDiv(
-            itFitsWrapperNode,
-            ["text_block", "it_fits"],
+            playerMatImageNode,
+            ["bag_label", "it_fits"],
             "itFits",
-            "It Fits!"
+            `<div class="main_text">It Fits!</div><div class="sub_text">Limit 3 Tried-on Items</div>`
           );
-
-          var boughtWrapperNode = htmlUtils.addDiv(
-            playerMatNode,
-            ["bought_wrapper"],
-            "boughtWraooer"
-          );
-
           htmlUtils.addDiv(
-            boughtWrapperNode,
-            ["text_block", "bought"],
+            playerMatImageNode,
+            ["bag_label", "bought"],
             "bought",
-            "Bought"
+            `<div class="main_text">Bought</div><div class="sub_text">No Limits</div>`
           );
         }
 
