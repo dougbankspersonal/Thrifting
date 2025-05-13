@@ -14,17 +14,19 @@ end
 
 -- DebugLog shite.
 local debugFlags = {
+    cardFlips = true,
     cardMarking = false,
+    cardTagging = true,
     cardUI = false,
     game = false,
+    global = false,
     heartbeat = false,
     markerUI = false,
     network = false,
-    originalDecal = true,
     ui = false,
 }
 
-function myPrintToAll(...)
+local function myPrintToAll(...)
     local args = { ... }
     local msg = ""
 
@@ -93,7 +95,8 @@ local ItemDeckGUID = "722737"
 local cardMarkingsByName = {}
 local nextCardId = 0
 
-local secBetweenLoops = 0.5
+local secBetweenCheckHandSizes = 0.5
+local secBetweenCheckCardFlips = 1.0
 
 local buttonPanelHeight = 40
 local buttonPanelWidth = 350
@@ -147,6 +150,49 @@ local xmlMarkerUIFormatString = [[
 local playerColorsToViewingMarkerUIMap = {
 }
 
+--[[
+I absolutely hate TTS and the way it handles position w.r.t. objects.Global
+The only way I know to get these values is to just experiment until it looks right.
+X seems to move things right/left across the card, with positive X pushinng thing to the left.
+Y seems to be about the thickness of the card.
+  * If it's too low the decal doesn't show up.
+  * If it's ridiculously high it doesn't seem to matter.
+Z seems to be about up/down on the card. Positive Z pushes things down.
+]]
+local topOffsetX = 0.7
+local offsetZ = 1.1
+local cardThickness = 0.36
+local bottomOffsetX = 0.6
+
+-- Remember -Z moves things up the card.
+local price1Position = Vector(topOffsetX, cardThickness, -offsetZ)
+local price2Position = Vector(0, cardThickness, -offsetZ)
+local price3Position = Vector(-topOffsetX, cardThickness, -offsetZ)
+
+local halfPricePosition = Vector(bottomOffsetX, cardThickness, offsetZ)
+local tornPosition = Vector(-bottomOffsetX, cardThickness, offsetZ)
+
+
+local decalXRot = 90
+local decalYRot = 180
+local decalZRot = 0
+
+local pricePositions = {
+    [1] = price1Position,
+    [2] = price2Position,
+    [3] = price3Position,
+}
+
+local decalFrontRotation = Vector(decalXRot, decalYRot, decalZRot)
+local decalBackRotation = Vector(decalXRot + 180, decalYRot, decalZRot)
+
+-- Got these from experiments too.  Why 15?  No idea.
+local decalScale = Vector(1, 1, 15)
+
+local itemDeckTag = "ItemDeck"
+local itemCardTag = "ItemCard"
+local itemCardNamePrefix = "ItemCard_"
+
 -- Get a list of all seated players in the game.
 local function getSeatedPlayers()
     Dlog("heartbeat", "getSeatedPlayers")
@@ -185,7 +231,7 @@ local function getPlayerItemCardCount(seatedPlayer)
     -- Count the objects that have the proper "item card" tag.
     local itemCardCount = 0
     for _, obj in ipairs(objects) do
-        if obj.hasTag("ItemCard") then
+        if obj.hasTag(itemCardTag) then
             itemCardCount = itemCardCount + 1
         end
     end
@@ -198,13 +244,12 @@ local function getPlayersSingleCard(seatedPlayer)
         return nil
     end
 
-    local zone = seatedPlayer.getHandTransform()
     local objects = seatedPlayer.getHandObjects()
     -- Count the objects that have the proper "item card" tag.
     local singleItemCard = nil
 
     for _, obj in ipairs(objects) do
-        if obj.hasTag("ItemCard") then
+        if obj.hasTag(itemCardTag) then
             if singleItemCard == nil then
                 singleItemCard = obj
             else
@@ -216,6 +261,39 @@ local function getPlayersSingleCard(seatedPlayer)
     return singleItemCard
 end
 
+local function getNameAndMarkingsForCard(itemCard)
+    Dlog("cardMarking", "getNameAndMarkingsForCard")
+    -- Card better have a name.
+    local cardName = itemCard.getName()
+    assert(cardName ~= nil, "cardName is nil!")
+    assert(cardName ~= "", "cardName is empty!")
+    -- Get the markings for this card.
+    local markings = cardMarkingsByName[cardName]
+    if not markings then
+        markings = {}
+    end
+    return cardName, markings
+end
+
+local function enforceOrientation(itemCard, shouldBeFaceUp)
+    Dlog("cardFlips", "enforceOritentation itemCard.Name = " .. itemCard.getName())
+    Ddump("cardFlips", "enforceOritentation itemCard rotation = ", itemCard.getRotation())
+end
+
+local function getSingleItemCardWithNameAndMarkings(player)
+    Dlog("cardMarking", "getSingleItemCardWithNameAndMarkings")
+    -- Get the card in the player's hand.  Should be exactly one.
+    local singleItemCard = getPlayersSingleCard(player)
+    if not singleItemCard then
+        Dlog("cardMarking", "getSingleItemCardWithNameAndMarkings 001")
+        -- Odd: button should be disabled.  Maybe a timing issue.
+        -- Handle gracefully.
+        return nil, nil, nil
+    end
+
+    local cardName, markings = getNameAndMarkingsForCard(singleItemCard)
+    return singleItemCard, cardName, markings
+end
 
 -- Refresh the UI: specifically who can see it.
 local refreshMarkerUICallCount = 0
@@ -266,36 +344,42 @@ local function hideMarkerUIForPlayer(playerColor)
     refreshMarkerUI()
 end
 
-function onPlayerHasOnlyOneCard(playerColor)
+local function onPlayerHasOnlyOneCard(playerColor)
     Dlog("markerUI", playerColor .. " now has exactly ONE card in hand!")
     -- Add your custom logic here
     showMarkerUIForPlayer(playerColor)
 end
 
-function onPlayerHasNotOneCard(playerColor)
+local function onPlayerHasNotOneCard(playerColor)
     Dlog("markerUI", playerColor .. " now has MORE or LESS than one card in hand!")
     -- Add your custom logic here
     hideMarkerUIForPlayer(playerColor)
 end
 
-local topPriceZ = -1.1
-local topPriceX = 0.7
+local function appendCardDecal(decals, frontPosition)
+    Dlog("cardUI", "appendCardDecal")
+    -- Add paper clip decal.
+    -- We want it front and back.
+    local frontDecal = {
+        name = "paperclip",
+        url = "https://i.imgur.com/A1ljX7A.png",
+        rotation = decalFrontRotation,
+        position = frontPosition,
+        scale = decalScale,
+    }
+    table.insert(decals, frontDecal)
 
-local v1 = Vector(topPriceX, 0.36, topPriceZ)
-local v2 = Vector(0, 0.36, topPriceZ)
-local v3 = Vector(-topPriceX, 0.36, topPriceZ)
-
-local pricePositions = {
-    [1] = v1,
-    [2] = v2,
-    [3] = v3,
-}
-
-local priceRotations = {
-    [1] = Vector(90, 180, 10),
-    [2] = Vector(90, 180, 0),
-    [3] = Vector(90, 180, -10),
-}
+    local backPosition = Vector(frontPosition.x, -frontPosition.y, frontPosition.z)
+    local backDecal = {
+        name = "paperclip",
+        url = "https://i.imgur.com/A1ljX7A.png",
+        rotation = decalBackRotation,
+        position = backPosition,
+        scale = decalScale,
+    }
+    table.insert(decals, backDecal)
+    return decals
+end
 
 local function updateCardUI(card)
     Dlog("cardUI", "updateCardUI")
@@ -309,29 +393,95 @@ local function updateCardUI(card)
     local markings = cardMarkingsByName[card.getName()]
     Ddump("cardUI", "markings = ", markings)
     local decals = {}
-    if markings ~= nil and markings.price then
-        -- Add a paper clip based on the price.
-        local oldDecals = card.getDecals()
-        Ddump("originalDecal", "oldDecals = ", oldDecals)
-
-        local pricePosition = pricePositions[markings.price]
-        local priceRotation = priceRotations[markings.price]
-        Dlog("ui", "Adding decals")
-        local decal = {
-            name = "paperclip",
-            url = "https://i.imgur.com/A1ljX7A.png",
-            rotation = priceRotation,
-            position = pricePosition,
-            scale = Vector(1, 1, 15),
-        }
-        table.insert(decals, decal)
+    if markings ~= nil then
+        if markings.price then
+            -- Add a paper clip based on the price.
+            Dlog("cardUI", "Setting price decals")
+            local pricePosition = pricePositions[markings.price]
+            appendCardDecal(decals, pricePosition)
+        end
+        if markings.isHalfPrice then
+            -- Add a paper clip for half price.
+            Dlog("cardUI", "Setting half price decals")
+            appendCardDecal(decals, halfPricePosition)
+        end
+        if markings.isTorn then
+            -- Add a paper clip for torn.
+            Dlog("cardUI", "Setting torn decals")
+            appendCardDecal(decals, tornPosition)
+        end
     end
-    Ddump("cardUI", "decals = ", decals)
     -- Set the decals for card.
     card.setDecals(decals)
 end
 
--- Called whenever something enters or leaves a player hand
+local function setPriceInternal(player, price)
+    Dlog("cardMarking", "price: " .. tostring(price))
+    local singleItemCard, cardName, markings = getSingleItemCardWithNameAndMarkings(player)
+    if not (singleItemCard and cardName and markings) then
+        Dlog("cardMarking", "setPriceInternal 001")
+        return
+    end
+    -- Set the price, update the UI.
+    markings.price = price
+    cardMarkingsByName[cardName] = markings
+    Ddump("cardMarking", "setPriceInternal cardMarkingsByName = ", cardMarkingsByName)
+
+    -- Update the UI for the card.
+    updateCardUI(singleItemCard)
+end
+
+local function isPointInHandZone(pos, transform)
+    local scale = transform.scale
+    local center = transform.position
+
+    return math.abs(pos.x - center.x) <= scale.x / 2 and
+        math.abs(pos.y - center.y) <= scale.y / 2 and
+        math.abs(pos.z - center.z) <= scale.z / 2
+end
+
+local function isInAnyHandZone(card)
+    local cardPos = card.getPosition()
+
+    local seatedPlayers = getSeatedPlayers()
+    for _, seatedPlayer in pairs(seatedPlayers) do
+        if seatedPlayer then
+            local handTransform = seatedPlayer.getHandTransform(1) -- 1 = main hand
+            if isPointInHandZone(cardPos, handTransform) then
+                Dlog("cardFlips", card.getName() .. " is in " .. seatedPlayer.color .. "'s hand.")
+                return true
+            end
+        end
+    end
+
+    Dlog("cardFlips", card.getName() .. " is not in any hand.")
+    return false
+end
+
+local function checkCardFlipForCard(itemCard)
+    DLog("cardFlips", "checkCardFlip")
+    if isInAnyHandZone(itemCard) then
+        return
+    end
+
+    -- It's on the table.
+    -- Is it priced?
+    local _, markings = getNameAndMarkingsForCard(itemCard)
+    if markings == nil or markings.price == nil or markings.price == 0 then
+        -- This is unpriced: keep it face down.
+        enforceOrientation(itemCard, false)
+    else
+        enforceOrientation(itemCard, true)
+    end
+end
+
+
+--[[
+    Non local functions.  Called as coroutines.
+]]
+-- Loop step from onLoad.
+-- This one worries about adding/removing the UI to edit a card iff the player has exactly one
+-- card in hand.
 function checkHandSizes()
     Dlog("heartbeat", "checkHandSizes")
     -- First, x out any players who are not seated.
@@ -360,60 +510,20 @@ function checkHandSizes()
     end
 end
 
-local function loopStep()
-    Dlog("heartbeat", "loopStep")
-    -- Check the hand sizes of all players.
-    checkHandSizes()
-    -- Call this function again after a short delay.
-    Wait.time(loopStep, secBetweenLoops)
-end
+function checkCardFlips()
+    Dlog("cardFlips", "checkCardFlips")
+    local taggedObjects = getObjectsWithTag(itemCardTag)
 
-local function startLoop()
-    Dlog("heartbeat", "startLoop")
-    loopStep();
-end
-
-local function setPriceInternal(player, price)
-    Dlog("cardMarking", "setPriceInternal")
-    Dlog("cardMarking", "price: " .. tostring(price))
-    -- Get the card in the player's hand.  Should be exactly one.
-    local singleItemCard = getPlayersSingleCard(player)
-    if not singleItemCard then
-        Dlog("cardMarking", "setPriceInternal 001")
-        -- Odd: button should be disabled.  Maybe a timing issue.
-        -- Handle gracefully.
-        return
+    for _, itemCard in ipairs(taggedObjects) do
+        checkCardFlipForCard(itemCard)
     end
-
-    Dlog("cardMarking", "setPriceInternal 002")
-    -- Set or change the markings on the card.
-    -- Card better have a name.
-    local cardName = singleItemCard.getName()
-    assert(cardName ~= nil, "cardName is nil!")
-    assert(cardName ~= "", "cardName is empty!")
-    -- Get the markings for this card.
-    local markings = cardMarkingsByName[cardName]
-    if not markings then
-        markings = {}
-    end
-    Ddump("cardMarking", "setPriceInternal markings = ", markings)
-    markings.price = price
-    cardMarkingsByName[cardName] = markings
-    Ddump("cardMarking", "setPriceInternal cardMarkingsByName = ", cardMarkingsByName)
-
-    -- Update the UI for the card.
-    updateCardUI(singleItemCard)
 end
 
-
---[[
-    Non local functions.  Called as coroutines.
-]]
 -- Button click handlers.
 -- Called from XML file.
 function SetPriceUnknown(player, value, id)
     Dlog("cardMarking", "In SetPriceUnknown")
-    setPriceInternal(player, null)
+    setPriceInternal(player, nil)
 end
 
 function SetPrice1(player, value, id)
@@ -431,33 +541,86 @@ function SetPrice3(player, value, id)
     setPriceInternal(player, 3)
 end
 
-function ToggleHalfPrice(player, value, id)
+function ToggleHalfPrice(player)
+    Dlog("cardMarking", "ToggleHalfPrice")
+    local singleItemCard, cardName, markings = getSingleItemCardWithNameAndMarkings(player)
+    if not (singleItemCard and cardName and markings) then
+        Dlog("cardMarking", "setPriceInternal 001")
+        return
+    end
+
+    -- Flip half price, update the UI.
+    local isHalfPrice = markings.isHalfPrice and true or false
+    markings.isHalfPrice = (not isHalfPrice)
+    cardMarkingsByName[cardName] = markings
+    Ddump("cardMarking", "ToggleHalfPrice cardMarkingsByName = ", cardMarkingsByName)
+
+    -- Update the UI for the card.
+    updateCardUI(singleItemCard)
 end
 
-function ToggleTorn(player, value, id)
+function ToggleTorn(player)
+    Dlog("cardMarking", "ToggleTorn")
+    local singleItemCard, cardName, markings = getSingleItemCardWithNameAndMarkings(player)
+    if not (singleItemCard and cardName and markings) then
+        Dlog("cardMarking", "setPriceInternal 001")
+        return
+    end
+
+    -- Flip torn, update the UI.
+    local isTorn = markings.isTorn and true or false
+    markings.isTorn = (not isTorn)
+    cardMarkingsByName[cardName] = markings
+    Ddump("cardMarking", "ToggleHalfPrice cardMarkingsByName = ", cardMarkingsByName)
+
+    -- Update the UI for the card.
+    updateCardUI(singleItemCard)
 end
 
 --[[
     API LEVEL FUNCTIONS
 ]]
 function onLoad()
-    Dlog("ui", "onLoad started")
-    startLoop()
+    Dlog("global", "onLoad started")
+    Timer.create({
+        identifier = "LoopA",
+        function_name = "checkHandSizes",
+        delay = secBetweenCheckHandSizes,
+        repetitions = 0 -- 0 = infinite
+    })
+
+    Timer.create({
+        identifier = "LoopB",
+        function_name = "checkCardFlips",
+        delay = secBetweenCheckCardFlips,
+        repetitions = 0
+    })
 end
 
 -- Make sure that all the cards in the item deck are tagged as ItemCards.
 -- Also give each card a unique ID that will persist when put back into
 -- a deck (card GUID does not persist).
 function onObjectLeaveContainer(container, object)
-    if container.getGUID() == ItemDeckGUID then
-        Dlog("ui", "Doug: tagging card.")
+    Dlog("global", "onObjectLeaveContainer.")
+    Dlog("cardTagging", "onObjectLeaveContainer.")
+    -- It'd be nice to check on the GUID of the container here.
+    -- But someone could split big deck into smaller decks and then we are in trouble.
+    -- Given that the only deck in the game is the item deck, I'm just going to test types and tags on the contanier.
+    if not container.hasTag(itemDeckTag) then
+        Dlog("cardTagging", "onObjectLeaveContainer: no tag.")
+        return
+    end
+    Dlog("cardTagging", "onObjectLeaveContainer: container.type = " .. container.type)
+    Dlog("cardTagging", "onObjectLeaveContainer: object.type = " .. object.type)
+    if container.type == "Deck" and object.type == "Card" then
+        Dlog("cardTagging", "onObjectLeaveContainer: applying tag.")
         -- This is an item card.
-        object.addTag("ItemCard")
+        object.addTag(itemCardTag)
         -- Give it an ID, written into the name field, only if we didn't already do that.
         local name = object.getName()
         if name == "" or name == nil then
             nextCardId = nextCardId + 1
-            object.setName("ItemCard" .. nextCardId)
+            object.setName(itemCardNamePrefix .. nextCardId)
         end
         -- Update the card UI based on the name.
         updateCardUI(object)
