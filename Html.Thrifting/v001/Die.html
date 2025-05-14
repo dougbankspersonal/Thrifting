@@ -1,8 +1,9 @@
 <html>
   <head>
-    <link rel="stylesheet" href="../SharedWebBoardGame/css/main.css" />
     <link rel="stylesheet" href="../SharedWebBoardGame/css/die.css" />
-    <link rel="stylesheet" href="../css/nuts_main.css" />
+    <link rel="stylesheet" href="../SharedWebBoardGame/css/main.css" />
+    <link rel="stylesheet" href="../SharedWebBoardGame/css/pricing_die.css" />
+    <link rel="stylesheet" href="../css/thrifting_main.css" />
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <style type="text/css"></style>
   </head>
@@ -35,12 +36,11 @@
     <script>
       require([
         "sharedJavascript/dieUtils",
-        "javascript/gameUtils",
         "sharedJavascript/pricingDie",
         "sharedJavascript/systemConfigs",
-      ], function (dieUtils, gameUtils, squirrelDie, systemConfigs) {
+      ], function (dieUtils, pricingDie, systemConfigs) {
         var sc = systemConfigs.addTTSDieSystemConfigs();
-        var usePhysicalDieSize = true;
+        var usePhysicalDieSize = false;
         if (usePhysicalDieSize) {
           sc.usePhysicalDieSize = true;
         }
