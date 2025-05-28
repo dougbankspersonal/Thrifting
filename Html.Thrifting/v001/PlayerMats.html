@@ -91,34 +91,35 @@
           );
           domStyle.set(outerFrameNode, {
             padding: `${outerFrameWidthPx}px`,
+            "background-color": gameInfo.orderedPlayerColors[index],
           });
 
-          var playerMatImageNode = htmlUtils.addImage(
+          var playerMatNode = htmlUtils.addImage(
             outerFrameNode,
-            ["player_mat_image"],
+            ["player_mat"],
             "mainDiv"
           );
 
-          domStyle.set(playerMatImageNode, {
+          domStyle.set(playerMatNode, {
             height: desiredImageHeightPx + "px",
             width: desiredImageWidthPx + "px",
           });
 
           htmlUtils.addDiv(
-            playerMatImageNode,
+            playerMatNode,
             ["bag_label", "to_try_on"],
             "toTryOn",
             `<div class="main_text">To<br>Try On</div><div class="sub_text">Limit 3 Priced Items</div>`
           );
 
           htmlUtils.addDiv(
-            playerMatImageNode,
+            playerMatNode,
             ["bag_label", "it_fits"],
             "itFits",
-            `<div class="main_text">It Fits!</div><div class="sub_text">Limit 3 Tried-on Items</div>`
+            `<div class="main_text">It Works!</div><div class="sub_text">Limit 3 Tried-on Items</div>`
           );
           htmlUtils.addDiv(
-            playerMatImageNode,
+            playerMatNode,
             ["bag_label", "bought"],
             "bought",
             `<div class="main_text">Bought</div><div class="sub_text">No Limits</div>`

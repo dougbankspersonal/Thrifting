@@ -37,27 +37,6 @@ unimportantText {
   font-size: 75%;
 }
 
-
-
-.card.front.clothes_card.monochrome {
-  border-color: #444444;
-  background: radial-gradient(ellipse, #ffffff, #ccc);
-}
-
-.card.front.clothes_card.jewel_tones {
-  border-color: #1177cc;
-  background: radial-gradient(ellipse, #ffffff, #adf);
-}
-.card.front.clothes_card.earth_tones {
-  border-color: #664400;
-  background: radial-gradient(ellipse, #ffffff, #ec9);
-}
-
-.card.front.clothes_card.pastels {
-  border-color: #aa7777;
-  background: radial-gradient(ellipse, #ffffff, #fdd);
-}
-
 .card.front.clothes_card {
   justify-content: center;
   align-items: center;
@@ -126,6 +105,13 @@ unimportantText {
     left: 50%;
     top: 50%;
 
+    .instance_name2 {
+      font-style: italic;
+      text-decoration: underline;
+      margin-top: 10px;
+      color: #556677;
+    }
+
     .style.bohemian {
       font-family: "Boho";
     }
@@ -155,17 +141,25 @@ unimportantText {
       width: 100%;
       position: relative;
 
-      .piece_container {
+      .icons_wrapper{
         display: flex;
         flex-direction: row;
-        align-items: center;
         justify-content: center;
+        align-items: center;
+        width: 90%;
+        padding-top: 10px;
 
-        .piece_image {
-          height: 36px;
-          width: 36px;
+        .pseudo_image {
+          height: 50px;
+          width: 50px;
+          filter: drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.5));
         }
       }
+    }
+
+    .text_wrapper {
+      margin-top: 10px;
+      color: #334433
     }
 
     .instance_name_container {
@@ -196,6 +190,7 @@ unimportantText {
       align-items: center;
       justify-content: center;
       margin-top: 10px;
+      color: #554444;
 
       .num_dice_and_rolls {
         font-style: italic;

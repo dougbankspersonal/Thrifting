@@ -139,6 +139,15 @@ define([
     // Get the name of the piece.
     var instanceName = instanceNames.getNextInstanceName(clothesCardConfig);
 
+    var instanceNameNode = htmlUtils.addDiv(
+      parentNode,
+      ["instance_name2"],
+      "instanceName2" + cardIndex,
+      instanceName
+    );
+    return instanceNameNode;
+
+    /*
     var instanceNameContainerNode = htmlUtils.addDiv(
       parentNode,
       ["instance_name_container"],
@@ -159,6 +168,9 @@ define([
     domStyle.set(instanceNameNode, {
       ["font-size"]: initialInstanceNameFontSize + "px",
     });
+
+    return instanceNameContainerNode;
+    */
   }
 
   function addClothesDesc(parentNode, clothesCardConfig, cardIndex) {
@@ -197,7 +209,8 @@ define([
     addBottomWidgets(parentNode);
   }
 
-  function addClothesCard(parentNode, index) {
+  function addNthClothesCard(parentNode, index) {
+    console.assert(parentNode, "parentNode is null");
     var clothesCardConfig = cards.getCardConfigFromIndex(
       clothesCardConfigs,
       index
@@ -205,16 +218,17 @@ define([
 
     var idElements = ["clothes_card", index.toString()];
     var id = idElements.join(".");
-    var classArray = [];
-    classArray.push("clothes_card");
-
-    // Color of item affect styling of card.
-    thriftingHtmlUtils.addColorSchemeClasses(
-      classArray,
-      clothesCardConfig.colorScheme
-    );
+    var classArray = ["clothes_card"];
+    classArray.push();
 
     var cardFront = cards.addCardFront(parentNode, classArray, id);
+
+    // Manually set the border color.
+    var borderColor =
+      parameters.colorSchemeHexColorStrings[clothesCardConfig.colorScheme];
+    domStyle.set(cardFront, {
+      "border-color": borderColor,
+    });
 
     addClothesDesc(cardFront, clothesCardConfig, index);
     return cardFront;
@@ -294,7 +308,7 @@ define([
 
   return {
     getNumClothesCards: getNumClothesCards,
-    addClothesCard: addClothesCard,
+    addNthClothesCard: addNthClothesCard,
     doInstanceNameTextScalingForAllCards: doInstanceNameTextScalingForAllCards,
   };
 });

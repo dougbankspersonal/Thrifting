@@ -30,7 +30,7 @@ define([
     {
       title: "Strong",
       rulesText:
-        '"To Try On" and "It Fits!" baskets can hold as many items as you want.',
+        '"To Try On" and "It Works!" baskets can hold as many items as you want.',
     },
     {
       title: "She Wears It Well",
@@ -83,7 +83,7 @@ define([
     },
     {
       title: "Tiny Hands",
-      rulesText: '"Try On" and "It Fits!" baskets can only hold 2 items.',
+      rulesText: '"Try On" and "It Works!" baskets can only hold 2 items.',
     },
     {
       title: "Running Late",

@@ -1,0 +1,94 @@
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Special+Elite&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../SharedWebBoardgame/css/main.css" />
+    <link rel="stylesheet" href="../SharedWebBoardgame/css/image.css" />
+    <link rel="stylesheet" href="../SharedWebBoardgame/css/card.css" />
+    <link rel="stylesheet" href="../css/param_card.css" />
+    <link rel="stylesheet" href="../css/thrifting_image.css" />
+    <link rel="stylesheet" href="../css/thrifting_main.css" />
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <style type="text/css"></style>
+  </head>
+
+  <body id="body">
+    <!-- configure Dojo -->
+    <script>
+      // Instead of using data-dojo-config, we're creating a dojoConfig
+      // object *before* we load dojo.js; they're functionally identical,
+      // it's just easier to read this approach with a larger configuration.
+      var dojoConfig = {
+        baseUrl: "..",
+        async: true,
+        // This code registers the correct location of the "demo"
+        // package so we can load Dojo from the CDN whilst still
+        // being able to load local modules
+        packages: [
+          { name: "dojo", location: "../../bower_components/dojo" },
+          { name: "javascript", location: "javascript" },
+          {
+            name: "sharedJavascript",
+            location: "SharedWebBoardgame/javascript",
+          },
+        ],
+      };
+    </script>
+    <!-- load Dojo -->
+    <script src="../../../bower_components/dojo/dojo.js"></script>
+
+    <script>
+      require([
+        "sharedJavascript/cards",
+        "sharedJavascript/debugLog",
+        "sharedJavascript/htmlUtils",
+        "sharedJavascript/systemConfigs",
+        "javascript/gameInfo",
+        "javascript/measurements",
+        "javascript/paramCards",
+        "javascript/parameters",
+      ], function (
+        cards,
+        debugLog,
+        htmlUtils,
+        systemConfigs,
+        gameInfo,
+        measurements,
+        paramCards,
+        parameters
+      ) {
+        var isTTS = false;
+        var sc;
+        if (isTTS) {
+          sc = systemConfigs.addSmallCardTTSCardSystemConfigs();
+        } else {
+          sc = systemConfigs.addSmallCardSizingSystemConfigs();
+        }
+        sc.cardBackFontSize = 36;
+        systemConfigs.setSystemConfigs(sc);
+
+        var numColorSchemeCards =
+          parameters.orderedColorSchemes.length * gameInfo.maxPlayers;
+
+        cards.addCards(
+          "Color Scheme",
+          parameters.orderedColorSchemes.length,
+          numColorSchemeCards,
+          paramCards.addNthColorSchemeCard,
+          function (parent, title, hexColorString, index) {
+            return paramCards.customBackCallback(
+              parent,
+              title,
+              parameters.orderedColorSchemes.length,
+              index
+            );
+          }
+        );
+      });
+    </script>
+  </body>
+</html>

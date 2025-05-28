@@ -1,27 +1,55 @@
+// Pieecs
 div.pseudo_image.bottom {
-  background-image: url("../images/ClothesCards/bottom.png");
+  background-image: url("../images/ClothesCards/pieces/bottom.png");
 }
 
 div.pseudo_image.dress {
-  background-image: url("../images/ClothesCards/dress.png");
+  background-image: url("../images/ClothesCards/pieces/dress.png");
 }
 
 div.pseudo_image.hat {
-  background-image: url("../images/ClothesCards/hat.png");
+  background-image: url("../images/ClothesCards/pieces/hat.png");
 }
 
 div.pseudo_image.shoes {
-  background-image: url("../images/ClothesCards/shoes.png");
+  background-image: url("../images/ClothesCards/pieces/shoes.png");
 }
 
 div.pseudo_image.top {
-  background-image: url("../images/ClothesCards/top.png");
+  background-image: url("../images/ClothesCards/pieces/top.png");
 }
 
 div.pseudo_image.wrap {
-  background-image: url("../images/ClothesCards/wrap.png");
+  background-image: url("../images/ClothesCards/pieces/wrap.png");
 }
 
-div.pseudo_image.player_mat_image {
+// Styles
+div.pseudo_image.classic {
+  background-image: url("../images/ClothesCards/styles/classic.png");
+}
+
+div.pseudo_image.elegant {
+  background-image: url("../images/ClothesCards/styles/elegant.png");
+}
+
+div.pseudo_image.whimsical {
+  background-image: url("../images/ClothesCards/styles/whimsical.png");
+}
+
+div.pseudo_image.retro {
+  background-image: url("../images/ClothesCards/styles/retro.png");
+}
+
+div.pseudo_image.bohemian {
+  background-image: url("../images/ClothesCards/styles/bohemian.png");
+}
+
+
+// Other
+div.pseudo_image.player_mat {
   background-image: url("../images/PlayerMat/playerMat.png");
+}
+
+div.pseudo_image.rejects {
+  background-image: url("../images/Rejects/rejects.png");
 }

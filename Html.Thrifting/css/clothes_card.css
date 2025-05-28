@@ -3,8 +3,7 @@ Color scheme is applied to top level card.  Unless a section explicity opts out
 it'll set color and shadow on all text on card.
 */
 .color_scheme {
-  text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white,
-    1px 1px 0 white;
+  text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
 }
 
 .color_scheme.monochrome {
@@ -34,26 +33,6 @@ importantText {
 
 unimportantText {
   font-size: 75%;
-}
-
-.card.front.clothes_card.monochrome {
-  border-color: #444444;
-  background: radial-gradient(ellipse, #ffffff, #ccc);
-}
-
-.card.front.clothes_card.jewel_tones {
-  border-color: #1177cc;
-  background: radial-gradient(ellipse, #ffffff, #adf);
-}
-
-.card.front.clothes_card.earth_tones {
-  border-color: #664400;
-  background: radial-gradient(ellipse, #ffffff, #ec9);
-}
-
-.card.front.clothes_card.pastels {
-  border-color: #aa7777;
-  background: radial-gradient(ellipse, #ffffff, #fdd);
 }
 
 .card.front.clothes_card {
@@ -117,6 +96,12 @@ unimportantText {
   left: 50%;
   top: 50%;
 }
+.card.front.clothes_card .formatted_wrapper .instance_name2 {
+  font-style: italic;
+  text-decoration: underline;
+  margin-top: 10px;
+  color: #556677;
+}
 .card.front.clothes_card .formatted_wrapper .style.bohemian {
   font-family: "Boho";
 }
@@ -141,19 +126,22 @@ unimportantText {
   width: 100%;
   position: relative;
 }
-.card.front.clothes_card .formatted_wrapper .card_spec .piece_container {
+.card.front.clothes_card .formatted_wrapper .card_spec .icons_wrapper {
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  width: 90%;
+  padding-top: 10px;
 }
-.card.front.clothes_card
-  .formatted_wrapper
-  .card_spec
-  .piece_container
-  .piece_image {
-  height: 36px;
-  width: 36px;
+.card.front.clothes_card .formatted_wrapper .card_spec .icons_wrapper .pseudo_image {
+  height: 50px;
+  width: 50px;
+  filter: drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.5));
+}
+.card.front.clothes_card .formatted_wrapper .text_wrapper {
+  margin-top: 10px;
+  color: #334433;
 }
 .card.front.clothes_card .formatted_wrapper .instance_name_container {
   height: 75px;
@@ -163,10 +151,7 @@ unimportantText {
   align-items: center;
   margin-top: 10px;
 }
-.card.front.clothes_card
-  .formatted_wrapper
-  .instance_name_container
-  .instance_name {
+.card.front.clothes_card .formatted_wrapper .instance_name_container .instance_name {
   font-size: 24px;
   font-weight: bold;
   display: inline-block;
@@ -184,6 +169,7 @@ unimportantText {
   align-items: center;
   justify-content: center;
   margin-top: 10px;
+  color: #554444;
 }
 .card.front.clothes_card .formatted_wrapper .try_on_rules .num_dice_and_rolls {
   font-style: italic;

@@ -1,22 +1,11 @@
 define(["sharedJavascript/genericMeasurements", "dojo/domReady!"], function (
   genericMeasurements
 ) {
-  var smallCardWidth = 160;
-  var smallCardHeight = 1.4 * smallCardWidth;
-  var smallCardBackFontSize = 24;
-
-  var smallCardFitHorizontally = Math.floor(
-    genericMeasurements.adjustedPageWidth / smallCardWidth
-  );
-  var smallCardFitVertically = Math.floor(
-    genericMeasurements.adjustedPageHeight / smallCardHeight
-  );
-  var smallCardsPerPage = smallCardFitHorizontally * smallCardFitVertically;
+  var clothesCardIconSizePx = genericMeasurements.standardCardWidthPx / 3 - 20;
+  var paramCardIconSizePx = genericMeasurements.smallCardWidthPx * 0.7;
 
   return {
-    smallCardWidth: smallCardWidth,
-    smallCardHeight: smallCardHeight,
-    smallCardBackFontSize: smallCardBackFontSize,
-    smallCardsPerPage: smallCardsPerPage,
+    clothesCardIconSizePx: clothesCardIconSizePx,
+    paramCardIconSizePx: paramCardIconSizePx,
   };
 });

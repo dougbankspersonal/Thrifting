@@ -48,13 +48,14 @@
         "javascript/modifierCards",
         "javascript/measurements",
       ], function (cards, systemConfigs, modifierCards, measurements) {
-        systemConfigs.setSystemConfigs(
-          systemConfigs.addCardSizingSystemConfigs(
-            measurements.smallCardWidth,
-            measurements.smallCardHeight,
-            measurements.smallCardBackFontSize
-          )
-        );
+        var isTTS = false;
+        var sc;
+        if (isTTS) {
+          sc = systemConfigs.addSmallCardTTSCardSystemConfigs();
+        } else {
+          sc = systemConfigs.addSmallCardSizingSystemConfigs();
+        }
+        systemConfigs.setSystemConfigs(sc);
         cards.addCards(
           "Strength",
           "#66aa66",

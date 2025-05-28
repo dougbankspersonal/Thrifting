@@ -1,17 +1,26 @@
 define([
   "dojo/dom-style",
   "sharedJavascript/htmlUtils",
-  "javascript/thriftingHtmlUtils",
+  "javascript/measurements",
+  "javascript/parameters",
   "dojo/domReady!",
-], function (domStyle, htmlUtils, thriftingHtmlUtils) {
-  var imageRotationDeg = 10;
+], function (domStyle, htmlUtils, measurements, parameters) {
+  function addColorSchemeSwatch(parent, colorSchemeValue, size) {
+    var colorSchemeHexColorString =
+      parameters.colorSchemeHexColorStrings[colorSchemeValue];
 
-  function addPieceImage(cardSpecNode, pieceType) {
-    return htmlUtils.addImage(
-      cardSpecNode,
-      ["piece_image", pieceType],
-      "pieceImage"
+    var colorSchemeSwatch = htmlUtils.addDiv(
+      parent,
+      ["color_scheme_swatch"],
+      "colorSchemeSwatch"
     );
+    domStyle.set(colorSchemeSwatch, {
+      "background-color": colorSchemeHexColorString,
+      width: size + "px",
+      height: size + "px",
+    });
+
+    return colorSchemeSwatch;
   }
 
   function addCardSpecNode(parent, clothesCardConfig) {
@@ -19,54 +28,67 @@ define([
 
     var cardSpecNode = htmlUtils.addDiv(parent, classes, "cardSpec");
 
-    var classArray = [];
-    thriftingHtmlUtils.addStyleClasses(classArray, clothesCardConfig.style);
-    var styleNode = htmlUtils.addDiv(
+    // 3 symbols left to right: <color scheme> <style> <piece>
+    var iconsWrapperNode = htmlUtils.addDiv(
       cardSpecNode,
-      classArray,
-      "style",
+      ["icons_wrapper"],
+      "iconsWrapper"
+    );
+    addColorSchemeSwatch(
+      iconsWrapperNode,
+      clothesCardConfig.colorScheme,
+      measurements.clothesCardIconSizePx - 8
+    );
+
+    var styleImage = htmlUtils.addImage(
+      iconsWrapperNode,
+      ["style_icon", parameters.paramToCssClass[clothesCardConfig.style]],
+      "styleIcon"
+    );
+    domStyle.set(styleImage, {
+      width: measurements.clothesCardIconSizePx + "px",
+      height: measurements.clothesCardIconSizePx + "px",
+    });
+
+    var pieceImage = htmlUtils.addImage(
+      iconsWrapperNode,
+      ["pieceIcon", parameters.paramToCssClass[clothesCardConfig.piece]],
+      "pieceIcon"
+    );
+    domStyle.set(pieceImage, {
+      width: measurements.clothesCardIconSizePx + "px",
+      height: measurements.clothesCardIconSizePx + "px",
+    });
+
+    // 3 text top to bottom: <color scheme> <style> <piece>
+    var textWrapperNode = htmlUtils.addDiv(
+      cardSpecNode,
+      ["text_wrapper"],
+      "textWrapper"
+    );
+    htmlUtils.addDiv(
+      textWrapperNode,
+      ["color_scheme_text", "spec_text"],
+      "colorSchemeText",
+      clothesCardConfig.colorScheme
+    );
+    htmlUtils.addDiv(
+      textWrapperNode,
+      ["style_text", "spec_text"],
+      "styleText",
       clothesCardConfig.style
     );
-
-    var pieceContainerNode = htmlUtils.addDiv(
-      cardSpecNode,
-      ["piece_container"],
-      "pieceContainer"
-    );
-
-    var preImage = addPieceImage(pieceContainerNode, clothesCardConfig.piece);
-    domStyle.set(preImage, {
-      transform: "rotate(" + (-imageRotationDeg).toString() + "deg)",
-    });
-
-    classArray = [];
-    thriftingHtmlUtils.addPieceClasses(classArray, clothesCardConfig.piece);
-    var pieceNode = htmlUtils.addDiv(
-      pieceContainerNode,
-      classArray,
-      "piece",
+    htmlUtils.addDiv(
+      textWrapperNode,
+      ["piece_text", "spec_text"],
+      "pieceText",
       clothesCardConfig.piece
-    );
-
-    var postImage = addPieceImage(pieceContainerNode, clothesCardConfig.piece);
-    domStyle.set(postImage, {
-      transform: "rotate(" + imageRotationDeg.toString() + "deg)",
-    });
-
-    classArray = [];
-    thriftingHtmlUtils.addPieceClasses(classArray, clothesCardConfig.piece);
-    var unimportantIn = thriftingHtmlUtils.makeUnimportantText("in");
-
-    var colorSchemeNode = htmlUtils.addDiv(
-      cardSpecNode,
-      classArray,
-      "colorScheme",
-      unimportantIn + "&nbsp;" + clothesCardConfig.colorScheme
     );
     return cardSpecNode;
   }
 
   return {
+    addColorSchemeSwatch: addColorSchemeSwatch,
     addCardSpecNode: addCardSpecNode,
   };
 });

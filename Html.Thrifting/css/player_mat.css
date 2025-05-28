@@ -6,65 +6,34 @@
   margin-top: 50px;
 }
 
-.outer_frame.player0 {
-  background-color: rgb(230, 230, 230);
-}
-
-.outer_frame.player1 {
-  background-color: rgb(181, 101, 29);
-}
-
-.outer_frame.player2 {
-  background-color: rgb(230, 100, 100);
-}
-
-.outer_frame.player3 {
-  background-color: rgb(230, 165, 100);
-}
-
-.outer_frame.player4 {
-  background-color: rgb(230, 230, 100);
-}
-
-.outer_frame.player5 {
-  background-color: rgb(100, 230, 100);
-}
-
-.outer_frame.player6 {
-  background-color: rgb(100, 100, 230);
-}
-
-.outer_frame.player7 {
-  background-color: rgb(165, 100, 230);
-}
-
-.player_mat_image {
+.player_mat {
   background-color: white;
   border-radius: 10px;
   border: 4px solid black;
   position: relative;
 }
-.player_mat_image .bag_label {
+.player_mat .bag_label {
   font-weight: bold;
   position: absolute;
   text-align: center;
 }
-.player_mat_image .to_try_on.bag_label {
+.player_mat .to_try_on.bag_label {
   width: 30%;
   height: 60%;
   top: 30%;
   left: 5%;
   font-family: "Groovy";
   color: rgb(210, 80, 230);
-  text-shadow: -1px -1px 0 rgb(124, 40, 100), 1px -1px 0 rgb(124, 40, 100), -1px 1px 0 rgb(124, 40, 100), 1px 1px 0 rgb(124, 40, 100);
+  text-shadow: -1px -1px 0 rgb(124, 40, 100), 1px -1px 0 rgb(124, 40, 100),
+    -1px 1px 0 rgb(124, 40, 100), 1px 1px 0 rgb(124, 40, 100);
 }
-.player_mat_image .to_try_on.bag_label .main_text {
+.player_mat .to_try_on.bag_label .main_text {
   font-size: 48px;
 }
-.player_mat_image .to_try_on.bag_label .sub_text {
+.player_mat .to_try_on.bag_label .sub_text {
   font-size: 30px;
 }
-.player_mat_image .it_fits.bag_label {
+.player_mat .it_fits.bag_label {
   width: 30%;
   height: 50%;
   top: 55%;
@@ -72,27 +41,29 @@
   font-family: "HennyPenny";
   font-size: 50px;
   color: rgb(150, 80, 0);
-  text-shadow: -1px -1px 0 rgb(75, 40, 0), 1px -1px 0 rgb(75, 40, 0), -1px 1px 0 rgb(75, 40, 0), 1px 1px 0 rgb(75, 40, 0);
+  text-shadow: -1px -1px 0 rgb(75, 40, 0), 1px -1px 0 rgb(75, 40, 0),
+    -1px 1px 0 rgb(75, 40, 0), 1px 1px 0 rgb(75, 40, 0);
 }
-.player_mat_image .it_fits.bag_label .main_text {
+.player_mat .it_fits.bag_label .main_text {
   font-size: 48px;
 }
-.player_mat_image .it_fits.bag_label .sub_text {
+.player_mat .it_fits.bag_label .sub_text {
   font-size: 30px;
 }
-.player_mat_image .bought.bag_label {
+.player_mat .bought.bag_label {
   width: 30%;
   height: 80%;
   top: 40%;
   left: 70%;
   font-family: "Merriweather";
   color: rgb(100, 70, 20);
-  text-shadow: -1px -1px 0 rgb(50, 35, 10), 1px -1px 5rgb 50, 35, 10, -1px 1px 0 rgb(50, 35, 10), 1px 1px 0 rgb(50, 35, 10);
+  text-shadow: -1px -1px 0 rgb(50, 35, 10), 1px -1px 5rgb 50, 35, 10,
+    -1px 1px 0 rgb(50, 35, 10), 1px 1px 0 rgb(50, 35, 10);
 }
-.player_mat_image .bought.bag_label .main_text {
+.player_mat .bought.bag_label .main_text {
   font-size: 60px;
 }
-.player_mat_image .bought.bag_label .sub_text {
+.player_mat .bought.bag_label .sub_text {
   font-size: 30px;
 }
 

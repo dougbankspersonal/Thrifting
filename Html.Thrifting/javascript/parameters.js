@@ -53,6 +53,20 @@ define(["dojo/domReady!"], function () {
     [Classic]: "classic",
     [Elegant]: "elegant",
     [Whimsical]: "whimsical",
+
+    [Top]: "top",
+    [Bottom]: "bottom",
+    [Shoes]: "shoes",
+    [Dress]: "dress",
+    [Hat]: "hat",
+    [Wrap]: "wrap",
+  };
+
+  var colorSchemeHexColorStrings = {
+    [EarthTones]: "#DEB887",
+    [JewelTones]: "#1070c0",
+    [Pastels]: "#e09090",
+    [Monochrome]: "#808080",
   };
 
   return {
@@ -89,5 +103,7 @@ define(["dojo/domReady!"], function () {
     parameterNamePieces: parameterNamePieces,
     parameterNameColorSchemes: parameterNameColorSchemes,
     parameterNameStyles: parameterNameStyles,
+
+    colorSchemeHexColorStrings: colorSchemeHexColorStrings,
   };
 });

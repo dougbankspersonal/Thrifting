@@ -18,7 +18,6 @@ define([
 
   function addColorSchemeClasses(classArray, colorScheme) {
     classArray.push(parameters.colorSchemeCssClass);
-    classArray.push(parameters.paramToCssClass[colorScheme]);
   }
 
   function addPieceClasses(classArray, piece) {

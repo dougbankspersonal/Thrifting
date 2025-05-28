@@ -30,7 +30,7 @@ define(["javascript/parameters", "dojo/domReady!"], function (parameters) {
     },
     [parameters.Shoes]: {
       [parameters.Bohemian]: ["Espadrilles ", "Moccasins", "Beaded Slip-Ons "],
-      [parameters.Retro]: ["Saddle Shoes", "Go-go Boots", "Clogs"],
+      [parameters.Retro]: ["Peep-Toe Pumps", "Go-go Boots", "Clogs"],
       [parameters.Classic]: [
         "Oxford Shoes",
         "Slingback Heels",
@@ -52,12 +52,12 @@ define(["javascript/parameters", "dojo/domReady!"], function (parameters) {
       [parameters.Retro]: ["Flapper Dress", "Swing Dress", "Mod Dress"],
       [parameters.Classic]: [
         "Empire Waist Dress",
-        "Little Black Dress",
+        "Fit-and-Flare Dress",
         "A-Line Dress",
       ],
       [parameters.Elegant]: ["Ball Gown", "Cocktail Dress", "Velvet Gown"],
       [parameters.Whimsical]: [
-        "Muumuu",
+        "Milkmaid Dress",
         "Evil Queen Costume",
         "Anime Cosplay Dress",
       ],
@@ -71,11 +71,7 @@ define(["javascript/parameters", "dojo/domReady!"], function (parameters) {
       [parameters.Retro]: ["Flapper Headband", "Pillbox Hat", "Bowler Hat"],
       [parameters.Classic]: ["Beanie", "Baseball Cap", "Bucket Hat"],
       [parameters.Elegant]: ["Tiara", "Fascinator", "Turban"],
-      [parameters.Whimsical]: [
-        "Mickey Mouse Ears",
-        "Gorilla Mask",
-        "Unicorn Horn",
-      ],
+      [parameters.Whimsical]: ["Bonnet", "Floppy Witch Hat", "Unicorn Horn"],
     },
     [parameters.Wrap]: {
       [parameters.Bohemian]: ["Poncho", "Hippie Shawl", "Tie Dye Shawl"],

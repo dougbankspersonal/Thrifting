@@ -48,12 +48,13 @@
         "sharedJavascript/systemConfigs",
         "javascript/clothesCards",
       ], function (cards, debugLog, systemConfigs, clothesCards) {
-        var isTTS = true;
+        var isTTS = false;
         var sc;
         if (isTTS) {
           sc = systemConfigs.addTTSCardSystemConfigs();
         } else {
           sc = systemConfigs.addCardSizingSystemConfigs();
+          sc.skipCardBacks = true;
         }
 
         systemConfigs.setSystemConfigs(sc);
@@ -65,14 +66,15 @@
           "Item",
           "#aaaacc",
           numClothesCards,
-          clothesCards.addClothesCard
+          clothesCards.addNthClothesCard
         );
 
-        // Delay scaling for 0ms to allow DOM updates to apply
-        setTimeout(() => {
-          clothesCards.doInstanceNameTextScalingForAllCards(numClothesCards);
-        }, 500);
-
+        /*
+              // Delay scaling for 0ms to allow DOM updates to apply
+              setTimeout(() => {
+                clothesCards.doInstanceNameTextScalingForAllCards(numClothesCards);
+              }, 500);
+      */
         debugLog.debugLog(
           "ScalingText",
           "Doug: called doInstanceNameTextScalingForAllCards.  Did it finish?"
