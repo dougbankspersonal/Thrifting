@@ -57,10 +57,12 @@
         }
         systemConfigs.setSystemConfigs(sc);
         cards.addCards(
-          "Strength",
-          "#66aa66",
           modifierCards.getNumStrengthCards(),
-          modifierCards.addStrengthCard
+          modifierCards.addStrengthCard,
+          {
+            hexColorString: "#66aa66",
+            title: "Strength",
+          }
         );
       });
     </script>

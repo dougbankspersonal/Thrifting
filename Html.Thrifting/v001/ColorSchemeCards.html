@@ -45,6 +45,7 @@
       require([
         "sharedJavascript/cards",
         "sharedJavascript/debugLog",
+        "sharedJavascript/genericUtils",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
         "javascript/gameInfo",
@@ -54,6 +55,7 @@
       ], function (
         cards,
         debugLog,
+        genericUtils,
         htmlUtils,
         systemConfigs,
         gameInfo,
@@ -61,32 +63,41 @@
         paramCards,
         parameters
       ) {
-        var isTTS = false;
+        var queryParams = genericUtils.getCommonQueryParams();
+
         var sc;
-        if (isTTS) {
+        if (queryParams.isTTS) {
           sc = systemConfigs.addSmallCardTTSCardSystemConfigs();
         } else {
           sc = systemConfigs.addSmallCardSizingSystemConfigs();
         }
+        sc.skipCardBacks = queryParams.skipCardBacks;
+
         sc.cardBackFontSize = 36;
         systemConfigs.setSystemConfigs(sc);
 
         var numColorSchemeCards =
           parameters.orderedColorSchemes.length * gameInfo.maxPlayers;
 
+        function backCallback(parent, title, hexColorString, index) {
+          return paramCards.customBackCallback(
+            parent,
+            title,
+            parameters.orderedColorSchemes.length,
+            index
+          );
+        }
+
+        var backConfig = {
+          hexColorString: "#aaaacc",
+          title: "Color Scheme",
+          callback: backCallback,
+        };
+
         cards.addCards(
-          "Color Scheme",
-          parameters.orderedColorSchemes.length,
           numColorSchemeCards,
           paramCards.addNthColorSchemeCard,
-          function (parent, title, hexColorString, index) {
-            return paramCards.customBackCallback(
-              parent,
-              title,
-              parameters.orderedColorSchemes.length,
-              index
-            );
-          }
+          backConfig
         );
       });
     </script>

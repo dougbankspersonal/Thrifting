@@ -45,6 +45,7 @@
       require([
         "sharedJavascript/cards",
         "sharedJavascript/debugLog",
+        "sharedJavascript/genericUtils",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
         "javascript/gameInfo",
@@ -54,6 +55,7 @@
       ], function (
         cards,
         debugLog,
+        genericUtils,
         htmlUtils,
         systemConfigs,
         gameInfo,
@@ -61,33 +63,37 @@
         paramCards,
         parameters
       ) {
-        var isTTS = false;
+        var queryParams = genericUtils.getCommonQueryParams();
+
         var sc;
-        if (isTTS) {
+        if (queryParams.isTTS) {
           sc = systemConfigs.addSmallCardTTSCardSystemConfigs();
         } else {
           sc = systemConfigs.addSmallCardSizingSystemConfigs();
         }
-        sc.cardBackFontSize = 36;
+        sc.skipCardBacks = queryParams.skipCardBacks;
+
         systemConfigs.setSystemConfigs(sc);
 
         var numStyleCards =
           parameters.orderedStyles.length * gameInfo.maxPlayers;
 
-        cards.addCards(
-          "Style",
-          parameters.orderedStyles.length,
-          numStyleCards,
-          paramCards.addNthStyleCard,
-          function (parent, title, hexColorString, index) {
-            return paramCards.customBackCallback(
-              parent,
-              title,
-              parameters.orderedStyles.length,
-              index
-            );
-          }
-        );
+        function backCallback(parent, title, hexColorString, index) {
+          return paramCards.customBackCallback(
+            parent,
+            title,
+            parameters.orderedStyles.length,
+            index
+          );
+        }
+
+        var backConfig = {
+          hexColorString: "#aaaacc",
+          title: "Style",
+          callback: backCallback,
+        };
+
+        cards.addCards(numStyleCards, paramCards.addNthStyleCard, backConfig);
       });
     </script>
   </body>

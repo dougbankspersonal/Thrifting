@@ -28,7 +28,10 @@ define([
     var rgbColorString = gameInfo.orderedPlayerColors[playerIndex];
     debugLog.debugLog("ParamCards", "Doug: rgbColorString = " + rgbColorString);
     var hexColorString = htmlUtils.rgbStringToHex(rgbColorString);
-    return cards.addCardBack(parent, title, hexColorString, index);
+    return cards.addCardBack(parent, index, {
+      hexColorString: hexColorString,
+      title: title,
+    });
   }
 
   function addNthParamCardFront(

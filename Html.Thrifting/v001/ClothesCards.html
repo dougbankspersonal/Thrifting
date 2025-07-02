@@ -45,29 +45,30 @@
       require([
         "sharedJavascript/cards",
         "sharedJavascript/debugLog",
+        "sharedJavascript/genericUtils",
         "sharedJavascript/systemConfigs",
         "javascript/clothesCards",
-      ], function (cards, debugLog, systemConfigs, clothesCards) {
-        var isTTS = false;
-        var sc;
-        if (isTTS) {
-          sc = systemConfigs.addTTSCardSystemConfigs();
-        } else {
-          sc = systemConfigs.addCardSizingSystemConfigs();
-          sc.skipCardBacks = true;
-        }
+      ], function (cards, debugLog, genericUtils, systemConfigs, clothesCards) {
+        var queryParams = genericUtils.getCommonQueryParams();
 
-        systemConfigs.setSystemConfigs(sc);
+        if (queryParams.isTTS) {
+          // See systemConfigs.js for more details on configs.
+          // This is the TTS config.
+          var ttsConfigs = systemConfigs.addTTSCardSystemConfigs();
+          systemConfigs.setSystemConfigs(ttsConfigs);
+        } else {
+          var nonTTSConfigs = systemConfigs.addCardSizingSystemConfigs();
+          nonTTSConfigs.skipCardBacks = queryParams.skipCardBacks;
+          systemConfigs.setSystemConfigs(nonTTSConfigs);
+        }
 
         var numClothesCards = clothesCards.getNumClothesCards();
         debugLog.debugLog("ScalingText", "Doug: Waiting for DOMContentLoaded!");
 
-        cards.addCards(
-          "Item",
-          "#aaaacc",
-          numClothesCards,
-          clothesCards.addNthClothesCard
-        );
+        cards.addCards(numClothesCards, clothesCards.addNthClothesCard, {
+          title: "Item",
+          hexColorString: "#aaaacc",
+        });
 
         /*
               // Delay scaling for 0ms to allow DOM updates to apply
