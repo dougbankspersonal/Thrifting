@@ -70,8 +70,8 @@
           sc = systemConfigs.addSmallCardTTSCardSystemConfigs();
         } else {
           sc = systemConfigs.addSmallCardSizingSystemConfigs();
+          sc.skipCardBacks = queryParams.skipCardBacks;
         }
-        sc.skipCardBacks = queryParams.skipCardBacks;
 
         systemConfigs.setSystemConfigs(sc);
 

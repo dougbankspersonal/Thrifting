@@ -54,12 +54,12 @@
         if (queryParams.isTTS) {
           // See systemConfigs.js for more details on configs.
           // This is the TTS config.
-          var ttsConfigs = systemConfigs.addTTSCardSystemConfigs();
-          systemConfigs.setSystemConfigs(ttsConfigs);
+          var sc = systemConfigs.addTTSCardSystemConfigs();
+          systemConfigs.setSystemConfigs(sc);
         } else {
-          var nonTTSConfigs = systemConfigs.addCardSizingSystemConfigs();
-          nonTTSConfigs.skipCardBacks = queryParams.skipCardBacks;
-          systemConfigs.setSystemConfigs(nonTTSConfigs);
+          var sc = systemConfigs.addCardSizingSystemConfigs();
+          sc.skipCardBacks = queryParams.skipCardBacks;
+          systemConfigs.setSystemConfigs(sc);
         }
 
         var numClothesCards = clothesCards.getNumClothesCards();

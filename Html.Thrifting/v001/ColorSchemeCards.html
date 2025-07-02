@@ -70,11 +70,13 @@
           sc = systemConfigs.addSmallCardTTSCardSystemConfigs();
         } else {
           sc = systemConfigs.addSmallCardSizingSystemConfigs();
+          sc.skipCardBacks = queryParams.skipCardBacks;
         }
-        sc.skipCardBacks = queryParams.skipCardBacks;
 
         sc.cardBackFontSize = 36;
         systemConfigs.setSystemConfigs(sc);
+
+        console.log("Doug: cardsPerRow = " + sc.cardsPerRow);
 
         var numColorSchemeCards =
           parameters.orderedColorSchemes.length * gameInfo.maxPlayers;
