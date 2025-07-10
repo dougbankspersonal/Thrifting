@@ -63,16 +63,7 @@
         paramCards,
         parameters
       ) {
-        var queryParams = genericUtils.getCommonQueryParams();
-
-        var sc;
-        if (queryParams.isTTS) {
-          sc = systemConfigs.addSmallCardTTSCardSystemConfigs();
-        } else {
-          sc = systemConfigs.addSmallCardSizingSystemConfigs();
-          sc.skipCardBacks = queryParams.skipCardBacks;
-        }
-
+        var sc = systemConfigs.getSmallCardSystemConfigs();
         sc.cardBackFontSize = 36;
         systemConfigs.setSystemConfigs(sc);
 

@@ -49,18 +49,8 @@
         "sharedJavascript/systemConfigs",
         "javascript/clothesCards",
       ], function (cards, debugLog, genericUtils, systemConfigs, clothesCards) {
-        var queryParams = genericUtils.getCommonQueryParams();
-
-        if (queryParams.isTTS) {
-          // See systemConfigs.js for more details on configs.
-          // This is the TTS config.
-          var sc = systemConfigs.addTTSCardSystemConfigs();
-          systemConfigs.setSystemConfigs(sc);
-        } else {
-          var sc = systemConfigs.addCardSizingSystemConfigs();
-          sc.skipCardBacks = queryParams.skipCardBacks;
-          systemConfigs.setSystemConfigs(sc);
-        }
+        var sc = systemConfigs.getCardSystemConfigs();
+        systemConfigs.setSystemConfigs(sc);
 
         var numClothesCards = clothesCards.getNumClothesCards();
         debugLog.debugLog("ScalingText", "Doug: Waiting for DOMContentLoaded!");
